@@ -24,12 +24,6 @@ export function Navbar() {
           <span className="font-semibold tracking-tight">VidStream</span>
         </Link>
         <nav className="flex items-center gap-3">
-          <Link
-            href="/browse"
-            className="text-sm text-slate-300 hover:text-white"
-          >
-            Browse
-          </Link>
           {user ? (
             <form
               onSubmit={async (e) => {

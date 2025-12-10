@@ -27,7 +27,7 @@ export default async function BrowsePage({ searchParams }: BrowsePageProps) {
   const username = session.user.email?.split("@")[0] ?? "Guest";
 
   return (
-    <div className="mx-auto max-w-6xl space-y-8 px-4 py-6">
+    <div className="mx-auto flex w-full max-w-6xl flex-col space-y-8 px-3 py-4 sm:px-4 sm:py-6">
       <NowPlayingHero movies={nowPlaying} username={username} />
 
       <Suspense fallback={<p className="text-slate-400">Loading titles…</p>}>

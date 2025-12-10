@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-linear-to-b from-slate-950 via-slate-900 to-slate-950",
+          "min-h-screen bg-linear-to-b from-slate-950 via-slate-900 to-slate-950 overflow-x-hidden",
           "text-slate-100 antialiased"
         )}
       >

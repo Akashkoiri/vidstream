@@ -18,20 +18,21 @@ export function PaginationControls({ page, totalPages }: Props) {
   const goTo = (next: number) => {
     setPage(next, {
       shallow: false,
-      history: "push", // ⬅️ triggers a proper navigation
+      history: "push",
       scroll: true,
     });
   };
 
   return (
-    <div className="flex items-center justify-between pt-2 text-xs text-slate-400">
-      <span>
+    <div className="flex flex-col gap-3 pt-2 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
+      <span className="text-center sm:text-left">
         Page {current} of {totalPages}
       </span>
-      <div className="flex gap-2">
+      <div className="flex w-full justify-center gap-2 sm:w-auto sm:justify-end">
         <Button
           variant="outline"
           size="sm"
+          className="flex-1 sm:flex-none"
           disabled={current <= 1}
           onClick={() => goTo(current - 1)}
         >
@@ -40,6 +41,7 @@ export function PaginationControls({ page, totalPages }: Props) {
         <Button
           variant="outline"
           size="sm"
+          className="flex-1 sm:flex-none"
           disabled={current >= totalPages}
           onClick={() => goTo(current + 1)}
         >

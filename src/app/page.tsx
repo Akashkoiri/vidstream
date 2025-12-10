@@ -60,8 +60,8 @@ export default function Home() {
             <div className="relative overflow-hidden rounded-3xl border border-slate-800 bg-slate-950/70 shadow-[0_0_80px_rgba(0,0,0,0.7)]">
               {/* Fake hero artwork */}
               <div className="relative h-44 w-full bg-linear-to-tr from-slate-900 via-slate-800 to-slate-900">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_#22d3ee33,_transparent_55%),radial-gradient(circle_at_bottom,_#e879f933,_transparent_55%)]" />
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,_transparent_0,_#02061788_40%,_#020617ff_70%)]" />
+                <div className="absolute inset-0 bg-[linear-gradient(circle_at_top,#22d3ee33,transparent_55%),radial-linear(circle_at_bottom,#e879f933,transparent_55%)]" />
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,transparent_0,#02061788_40%,#020617ff_70%)]" />
                 <div className="absolute bottom-4 left-4 space-y-1">
                   <p className="text-xs uppercase tracking-[0.2em] text-cyan-300/80">
                     Now streaming
