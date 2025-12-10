@@ -1,34 +1,27 @@
-// app/browse/movies-grid.tsx
-"use client";
-
-import { useQuery } from "@tanstack/react-query";
-import { getPopularMovies, getImageUrl } from "@/lib/tmdb";
 import Link from "next/link";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
-import MoviePagination from "@/components/movie-pagination";
-import { Spinner } from "@/components/ui/spinner";
+import { getImageUrl, type TmdbMovie } from "@/lib/tmdb";
+import { PaginationControls } from "./pagination-controls";
+import { SortTabs } from "./sort-tabs";
 
-export function MoviesGrid({ page }: { page: number }) {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["popular", page],
-    queryFn: () => getPopularMovies(page),
-  });
+type Props = {
+  movies: TmdbMovie[];
+  page: number;
+  totalPages: number;
+  sort: "popular" | "top_rated" | "upcoming";
+};
 
-  if (isLoading) {
-    return <Spinner />;
-  }
-
-  if (error || !data) {
-    return <p>Failed to load popular movies.</p>;
-  }
-
+export function MoviesGrid({ movies, page, totalPages, sort }: Props) {
   return (
-    <section className="space-y-3">
-      <h2 className="text-lg font-medium">Popular right now</h2>
+    <section className="space-y-4">
+      <div className="flex items-center justify-between gap-4">
+        <h2 className="text-lg font-medium">Browse movies</h2>
+        <SortTabs sort={sort} />
+      </div>
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        {data.results.slice(0, 12).map((m) => {
+        {movies.slice(0, 12).map((m) => {
           const year = m.release_date
             ? new Date(m.release_date).getFullYear()
             : "—";
@@ -36,20 +29,20 @@ export function MoviesGrid({ page }: { page: number }) {
 
           return (
             <Link key={m.id} href={`/watch/movie/${m.id}`}>
-              <Card className="py-0 gap-0 group overflow-hidden rounded-xl border border-slate-800 bg-slate-900/70 transition hover:border-cyan-500/30">
-                <div className="relative aspect-2/3 w-full overflow-hidden">
+              <Card className="p-0 gap-0 group overflow-hidden border-slate-800 bg-slate-900/70">
+                <div className="relative aspect-2/3 w-full bg-linear-to-br from-slate-800 to-slate-900">
                   {poster && (
                     <Image
                       src={poster}
                       alt={m.title}
                       fill
-                      className="object-cover transition-all duration-300 group-hover:scale-105"
+                      sizes="(min-width: 768px) 25vw, 50vw"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   )}
                 </div>
-
                 <CardContent className="space-y-1 p-3">
-                  <p className="line-clamp-1 text-md font-medium transition-colors duration-200 group-hover:text-cyan-400">
+                  <p className="line-clamp-1 text-sm font-medium group-hover:text-cyan-400">
                     {m.title}
                   </p>
                   <p className="text-xs text-slate-400">{year}</p>
@@ -60,9 +53,7 @@ export function MoviesGrid({ page }: { page: number }) {
         })}
       </div>
 
-      <div className="pt-6">
-        <MoviePagination page={page} totalPages={data.total_pages} />
-      </div>
+      <PaginationControls page={page} totalPages={totalPages} />
     </section>
   );
 }

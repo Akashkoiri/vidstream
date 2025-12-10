@@ -1,59 +1,72 @@
-// lib/tmdb.ts
+// src/lib/tmdb.ts
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
+
+if (!process.env.TMDB_ACCESS_TOKEN) {
+  throw new Error("TMDB_ACCESS_TOKEN is not set");
+}
 
 export type TmdbMovie = {
   id: number;
   title: string;
-  poster_path: string | null;
-  release_date?: string;
+  release_date: string;
+  poster_path: string;
+  backdrop_path?: string;
+  overview?: string;
 };
 
-export type TmdbMoviePage = {
+export async function getMovies(options: {
   page: number;
-  results: TmdbMovie[];
-  total_pages: number;
-  total_results: number;
-};
+  sort: "popular" | "top_rated" | "upcoming";
+}) {
+  const { page, sort } = options;
 
-async function fetchMoviePage(
-  path: string,
-  page: number
-): Promise<TmdbMoviePage> {
   const res = await fetch(
-    `${TMDB_BASE_URL}${path}?language=en-US&page=${page}`,
+    `${TMDB_BASE_URL}/movie/${sort}?language=en-US&page=${page}`,
     {
       headers: {
         accept: "application/json",
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN}`,
+        Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
       },
+      next: { revalidate: 3600 },
     }
   );
 
   if (!res.ok) {
-    console.error(await res.text());
-    throw new Error(`TMDB request failed for ${path}`);
+    throw new Error(`TMDB error: ${res.status}`);
   }
 
-  return res.json();
+  const data = await res.json();
+  return {
+    movies: data.results as TmdbMovie[],
+    totalPages: data.total_pages as number,
+  };
 }
 
-export function getImageUrl(path: string | null, size: string = "w500") {
+export async function getNowPlayingMovies() {
+  const res = await fetch(
+    `${TMDB_BASE_URL}/movie/now_playing?language=en-US&page=1`,
+    {
+      headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
+      },
+      // refresh a bit more often for "now playing"
+      next: { revalidate: 600 },
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error(`TMDB error: ${res.status}`);
+  }
+
+  const data = await res.json();
+  return data.results as TmdbMovie[];
+}
+
+export function getImageUrl(
+  path: string | null,
+  size: "w500" | "original" = "w500"
+) {
   if (!path) return null;
   return `https://image.tmdb.org/t/p/${size}${path}`;
-}
-
-export function getPopularMovies(page = 1) {
-  return fetchMoviePage("/movie/popular", page);
-}
-
-export function getUpcomingMovies(page = 1) {
-  return fetchMoviePage("/movie/upcoming", page);
-}
-
-export function getNowPlaying(page = 1) {
-  return fetchMoviePage("/movie/now_playing", page);
-}
-
-export function getTopRatedMovies(page = 1) {
-  return fetchMoviePage("/movie/top_rated", page);
 }
