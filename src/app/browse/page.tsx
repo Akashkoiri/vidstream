@@ -22,7 +22,7 @@ export default async function BrowsePage({ searchParams }: BrowsePageProps) {
   const { movies, totalPages } = await getMovies({ page, sort });
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col space-y-8 px-3 py-4 sm:px-4 sm:py-6">
+    <div className="mx-auto flex w-full flex-col space-y-8 px-3 sm:px-4 sm:py-6">
       <Suspense fallback={<Spinner />}>
         <div id="browse-grid">
           <MoviesGrid

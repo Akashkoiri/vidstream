@@ -59,7 +59,8 @@ export async function getNowPlayingMovies() {
   }
 
   const data = await res.json();
-  return data.results as TmdbMovie[];
+  // return data.results as TmdbMovie[];
+  return (data.results as TmdbMovie[]).slice(0, 10);
 }
 
 // 🔎 NEW: search endpoint

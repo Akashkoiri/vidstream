@@ -126,7 +126,7 @@ export function SearchDialog() {
                     onClick={() => setOpen(false)}
                   >
                     <Card className="p-0 gap-0 group overflow-hidden border-slate-800 bg-slate-900/70">
-                      <div className="relative aspect-[2/3] w-full bg-slate-800">
+                      <div className="relative aspect-2/3 w-full bg-slate-800">
                         {poster && (
                           <Image
                             src={poster}

@@ -6,9 +6,10 @@ import Link from "next/link";
 import type { TmdbMovie } from "@/lib/tmdb";
 import { Badge } from "@/components/ui/badge";
 
+// TMDB Image Helper
 function getImageUrl(
   path: string | null | undefined,
-  size: "w500" | "original" = "original"
+  size: "w780" | "original" = "w780"
 ) {
   if (!path) return null;
   return `https://image.tmdb.org/t/p/${size}${path}`;
@@ -19,23 +20,23 @@ type Props = {
   username: string;
 };
 
-const AUTOPLAY_INTERVAL = 15000; // ms
+const AUTOPLAY_INTERVAL = 12000;
 
-export function NowPlayingHero({ movies, username }: Props) {
+export function NowPlayingHero({ movies }: Props) {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
     const id = setInterval(() => {
       setIndex((prev) => (prev + 1) % movies.length);
     }, AUTOPLAY_INTERVAL);
-
     return () => clearInterval(id);
   }, [movies.length]);
 
   if (!movies.length) return null;
 
   return (
-    <section className="relative w-full max-w-full overflow-hidden bg-slate-950">
+    <section className="relative w-full overflow-hidden bg-slate-950">
+      {/* SLIDES WRAPPER */}
       <div
         className="flex transition-transform duration-700 ease-out"
         style={{ transform: `translateX(-${index * 100}%)` }}
@@ -44,27 +45,24 @@ export function NowPlayingHero({ movies, username }: Props) {
           <HeroSlide
             key={movie.id}
             movie={movie}
-            username={username}
             isActive={i === index}
             index={i}
           />
         ))}
       </div>
 
-      {/* Controls overlay */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex justify-center px-4 pb-4 sm:px-6 sm:pb-5 md:px-8">
-        <div className="pointer-events-auto flex max-w-xs flex-1 justify-center gap-1 sm:justify-center">
-          {movies.slice(0, 10).map((m, i) => (
+      {/* DOTS */}
+      <div className="absolute inset-x-0 bottom-6 z-20 flex justify-center">
+        <div className="flex gap-2">
+          {movies.slice(0, movies.length).map((m, i) => (
             <button
               key={m.id}
-              type="button"
               onClick={() => setIndex(i)}
-              className={`h-1.5 rounded-full transition-all ${
+              className={`h-2 rounded-full transition-all ${
                 i === index
                   ? "w-6 bg-cyan-400"
-                  : "w-2 bg-slate-600 hover:bg-slate-400"
+                  : "w-2 bg-slate-500 hover:bg-slate-300"
               }`}
-              aria-label={`Go to ${m.title}`}
             />
           ))}
         </div>
@@ -75,19 +73,19 @@ export function NowPlayingHero({ movies, username }: Props) {
 
 type SlideProps = {
   movie: TmdbMovie;
-  username: string;
   isActive: boolean;
   index: number;
 };
 
 function HeroSlide({ movie, isActive, index }: SlideProps) {
-  const backdrop = getImageUrl(movie.backdrop_path, "w500");
+  const backdrop = getImageUrl(movie.backdrop_path, "original");
   const year = movie.release_date
     ? new Date(movie.release_date).getFullYear()
     : null;
 
   return (
-    <article className="relative min-w-full overflow-hidden">
+    <article className="relative min-w-full overflow-hidden h-[65vh] sm:h-[70vh] md:h-[75vh] flex items-center">
+      {/* BACKDROP IMAGE */}
       {backdrop && (
         <div className="absolute inset-0">
           <Image
@@ -95,44 +93,43 @@ function HeroSlide({ movie, isActive, index }: SlideProps) {
             alt={movie.title}
             fill
             priority={index === 0}
-            loading={index === 0 ? "eager" : "eager"}
             className={`object-cover transition-opacity duration-700 ${
-              isActive ? "opacity-40" : "opacity-30"
+              isActive ? "opacity-45" : "opacity-30"
             }`}
           />
-          <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/85 to-transparent" />
+          {/* DARK GRADIENT */}
+          <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/70 to-transparent" />
         </div>
       )}
 
-      <div className="relative z-10 flex min-h-[220px] flex-col gap-4 p-8 pb-0  sm:min-h-[260px] sm:gap-6 md:min-h-[320px]">
-        <div className="max-w-xl space-y-3 sm:max-w-3xl sm:space-y-4">
-          <p className="text-[10px] font-medium uppercase tracking-[0.25em] text-cyan-400/80 sm:text-xs">
-            Now playing in theatres
-          </p>
-          <h1 className="text-2xl font-semibold leading-tight sm:text-3xl md:text-4xl">
-            {movie.title}
-          </h1>
+      {/* TEXT CONTENT */}
+      <div className="relative z-10 max-w-4xl px-6 sm:px-10 md:px-14 translate-y-[30%]">
+        <p className="text-sm uppercase tracking-widest text-cyan-300/80">
+          Now Playing
+        </p>
 
-          <div className="space-y-2">
-            <div className="flex flex-wrap items-center gap-1.5 text-xs text-slate-200 sm:gap-2 sm:text-sm">
-              {year && <span className="font-medium">{year}</span>}
-              <Badge className="bg-cyan-500/90 text-[10px] text-slate-950 sm:text-xs">
-                Now playing
-              </Badge>
-            </div>
-            <p className="max-w-xl text-xs text-slate-200/90 line-clamp-3 sm:text-sm">
-              {movie.overview || "No synopsis available yet."}
-            </p>
-          </div>
+        <h1 className="mt-2 text-2xl font-bold sm:text-3xl md:text-4xl leading-tight">
+          {movie.title}
+        </h1>
 
-          <div className="flex flex-wrap gap-2 pt-1 sm:gap-3 sm:pt-2">
-            <Link
-              href={`/watch/movie/${movie.id}`}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-cyan-500 px-4 py-2 text-sm font-medium text-slate-950 shadow-lg shadow-cyan-500/20 transition hover:bg-cyan-400 sm:px-5"
-            >
-              ▶ Watch now
-            </Link>
-          </div>
+        <div className="flex items-center gap-3 mt-3 text-sm text-slate-200">
+          {year && <span className="opacity-80">{year}</span>}
+          <Badge className="bg-cyan-500 text-slate-950 text-xs">
+            In theatres
+          </Badge>
+        </div>
+
+        <p className="mt-3 max-w-xl text-slate-300 text-sm sm:text-base line-clamp-3">
+          {movie.overview || "No description available."}
+        </p>
+
+        <div className="mt-6 flex gap-3">
+          <Link
+            href={`/watch/movie/${movie.id}`}
+            className="rounded-full bg-cyan-500 text-slate-950 px-6 py-2 text-sm font-semibold shadow-md hover:bg-cyan-400 transition"
+          >
+            ▶ Watch Now
+          </Link>
         </div>
       </div>
     </article>
