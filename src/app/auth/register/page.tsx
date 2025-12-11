@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Spinner } from "@/components/ui/spinner";
+import { SocialAuthButtons } from "@/components/auth/social-buttons";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -36,7 +37,7 @@ export default function RegisterPage() {
     const { error } = await authClient.signUp.email({
       email,
       password,
-      name: email.split("@")[0] || "User", // 👈 added
+      name: email.split("@")[0] || "User",
     });
 
     setLoading(false);
@@ -56,8 +57,10 @@ export default function RegisterPage() {
         <CardHeader>
           <CardTitle className="text-xl">Create your account</CardTitle>
         </CardHeader>
+
         <CardContent>
           <form className="space-y-4" onSubmit={onSubmit}>
+            {/* email */}
             <div className="space-y-1">
               <label className="text-sm text-slate-200">Email</label>
               <Input
@@ -69,6 +72,8 @@ export default function RegisterPage() {
                 className="bg-slate-900/70"
               />
             </div>
+
+            {/* password */}
             <div className="space-y-1">
               <label className="text-sm text-slate-200">Password</label>
               <PasswordInput
@@ -78,6 +83,7 @@ export default function RegisterPage() {
               />
             </div>
 
+            {/* confirm password */}
             <div className="space-y-1">
               <label className="text-sm text-slate-200">Confirm Password</label>
               <PasswordInput
@@ -88,11 +94,26 @@ export default function RegisterPage() {
             </div>
 
             {error && <p className="text-sm text-red-400">{error}</p>}
+
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? <Spinner /> : "Sign up"}
             </Button>
+
+            {/* Divider */}
+            <div className="my-6 flex items-center gap-3">
+              <div className="h-px flex-1 bg-slate-700" />
+              <span className="text-[11px] uppercase text-slate-500">
+                or continue with
+              </span>
+              <div className="h-px flex-1 bg-slate-700" />
+            </div>
+
+            {/* ⭐ Social Auth Buttons ⭐ */}
+            <SocialAuthButtons />
+
+            {/* redirect */}
             <p className="text-center text-xs text-slate-400">
-              Already have an account?
+              Already have an account?{" "}
               <Link
                 href="/auth/login"
                 className="text-cyan-400 hover:underline"

@@ -26,7 +26,7 @@ export function MoviesGrid({ movies, page, totalPages, sort }: Props) {
       {/* Smaller grid, tighter spacing, more compact cards */}
       <div
         className="grid w-full max-w-full 
-                      grid-cols-3 gap-2 
+                      grid-cols-3 gap-3 
                       xs:grid-cols-3 
                       sm:grid-cols-4 
                       md:grid-cols-5"
@@ -39,7 +39,7 @@ export function MoviesGrid({ movies, page, totalPages, sort }: Props) {
 
           return (
             <Link key={m.id} href={`/watch/movie/${m.id}`} className="block">
-              <Card className="group overflow-hidden border-slate-800 bg-slate-900/70 p-0 rounded-lg">
+              <Card className="group overflow-hidden border-slate-800 bg-slate-900/70 p-0 rounded-lg gap-2">
                 {/* Smaller aspect ratio → shorter cards */}
                 <div className="relative aspect-2/3 w-full bg-linear-to-br from-slate-800 to-slate-900">
                   {poster && (
@@ -55,7 +55,7 @@ export function MoviesGrid({ movies, page, totalPages, sort }: Props) {
 
                 {/* Smaller padding + smaller text */}
                 <CardContent className="space-y-1 p-1.5 sm:p-2">
-                  <p className="line-clamp-1 text-[11px] font-medium sm:text-xs group-hover:text-cyan-400">
+                  <p className="line-clamp-1 text-md font-medium sm:text-sm group-hover:text-cyan-400">
                     {m.title}
                   </p>
                   <p className="text-[10px] text-slate-400 sm:text-[11px]">

@@ -5,9 +5,9 @@ import { headers } from "next/headers";
 import { Suspense } from "react";
 import type { SearchParams } from "nuqs/server";
 import { loadBrowseSearchParams } from "./search-params";
-import { getMovies, getNowPlayingMovies } from "@/lib/tmdb";
+import { getMovies } from "@/lib/tmdb";
 import { MoviesGrid } from "./movies-grid";
-import { NowPlayingHero } from "./now-playing-hero";
+import { Spinner } from "@/components/ui/spinner";
 
 type BrowsePageProps = {
   searchParams: Promise<SearchParams>;
@@ -19,18 +19,11 @@ export default async function BrowsePage({ searchParams }: BrowsePageProps) {
 
   const { page, sort } = await loadBrowseSearchParams(searchParams);
 
-  const [{ movies, totalPages }, nowPlaying] = await Promise.all([
-    getMovies({ page, sort }),
-    getNowPlayingMovies(),
-  ]);
-
-  const username = session.user.email?.split("@")[0] ?? "Guest";
+  const { movies, totalPages } = await getMovies({ page, sort });
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col space-y-8 px-3 py-4 sm:px-4 sm:py-6">
-      <NowPlayingHero movies={nowPlaying} username={username} />
-
-      <Suspense fallback={<p className="text-slate-400">Loading titles…</p>}>
+      <Suspense fallback={<Spinner />}>
         <div id="browse-grid">
           <MoviesGrid
             movies={movies}

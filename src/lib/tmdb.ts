@@ -50,7 +50,6 @@ export async function getNowPlayingMovies() {
         accept: "application/json",
         Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
       },
-      // refresh a bit more often for "now playing"
       next: { revalidate: 600 },
     }
   );
@@ -61,6 +60,39 @@ export async function getNowPlayingMovies() {
 
   const data = await res.json();
   return data.results as TmdbMovie[];
+}
+
+// 🔎 NEW: search endpoint
+export async function searchMovies(options: { query: string; page?: number }) {
+  const { query, page = 1 } = options;
+
+  const params = new URLSearchParams({
+    query,
+    include_adult: "false",
+    language: "en-US",
+    page: String(page),
+  });
+
+  const res = await fetch(
+    `${TMDB_BASE_URL}/search/movie?${params.toString()}`,
+    {
+      headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
+      },
+      next: { revalidate: 300 },
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error(`TMDB search error: ${res.status}`);
+  }
+
+  const data = await res.json();
+  return {
+    movies: data.results as TmdbMovie[],
+    totalPages: data.total_pages as number,
+  };
 }
 
 export function getImageUrl(

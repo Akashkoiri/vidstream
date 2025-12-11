@@ -22,8 +22,6 @@ type Props = {
 const AUTOPLAY_INTERVAL = 15000; // ms
 
 export function NowPlayingHero({ movies, username }: Props) {
-  // if (!movies.length) return null;
-
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -34,8 +32,10 @@ export function NowPlayingHero({ movies, username }: Props) {
     return () => clearInterval(id);
   }, [movies.length]);
 
+  if (!movies.length) return null;
+
   return (
-    <section className="relative w-full max-w-full overflow-hidden rounded-2xl border border-slate-800 bg-slate-950 sm:rounded-3xl">
+    <section className="relative w-full max-w-full overflow-hidden bg-slate-950">
       <div
         className="flex transition-transform duration-700 ease-out"
         style={{ transform: `translateX(-${index * 100}%)` }}
@@ -52,8 +52,8 @@ export function NowPlayingHero({ movies, username }: Props) {
       </div>
 
       {/* Controls overlay */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex justify-end px-4 pb-4 sm:px-6 sm:pb-5 md:px-8">
-        <div className="pointer-events-auto flex max-w-xs flex-1 justify-end gap-1 sm:justify-end">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex justify-center px-4 pb-4 sm:px-6 sm:pb-5 md:px-8">
+        <div className="pointer-events-auto flex max-w-xs flex-1 justify-center gap-1 sm:justify-center">
           {movies.slice(0, 10).map((m, i) => (
             <button
               key={m.id}
@@ -80,7 +80,7 @@ type SlideProps = {
   index: number;
 };
 
-function HeroSlide({ movie, username, isActive, index }: SlideProps) {
+function HeroSlide({ movie, isActive, index }: SlideProps) {
   const backdrop = getImageUrl(movie.backdrop_path, "w500");
   const year = movie.release_date
     ? new Date(movie.release_date).getFullYear()
@@ -104,23 +104,18 @@ function HeroSlide({ movie, username, isActive, index }: SlideProps) {
         </div>
       )}
 
-      <div className="relative z-10 flex min-h-[220px] flex-col gap-4 p-4 sm:min-h-[260px] sm:gap-6 sm:p-6 md:min-h-[320px] md:p-8">
+      <div className="relative z-10 flex min-h-[220px] flex-col gap-4 p-8 pb-0  sm:min-h-[260px] sm:gap-6 md:min-h-[320px]">
         <div className="max-w-xl space-y-3 sm:max-w-3xl sm:space-y-4">
           <p className="text-[10px] font-medium uppercase tracking-[0.25em] text-cyan-400/80 sm:text-xs">
             Now playing in theatres
           </p>
           <h1 className="text-2xl font-semibold leading-tight sm:text-3xl md:text-4xl">
-            Welcome back, <span className="text-cyan-400">{username}</span>
+            {movie.title}
           </h1>
 
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-1.5 text-xs text-slate-200 sm:gap-2 sm:text-sm">
-              <span className="font-medium">{movie.title}</span>
-              {year && (
-                <span className="text-[11px] text-slate-300/80 sm:text-xs">
-                  • {year}
-                </span>
-              )}
+              {year && <span className="font-medium">{year}</span>}
               <Badge className="bg-cyan-500/90 text-[10px] text-slate-950 sm:text-xs">
                 Now playing
               </Badge>
@@ -136,12 +131,6 @@ function HeroSlide({ movie, username, isActive, index }: SlideProps) {
               className="inline-flex items-center justify-center gap-2 rounded-full bg-cyan-500 px-4 py-2 text-sm font-medium text-slate-950 shadow-lg shadow-cyan-500/20 transition hover:bg-cyan-400 sm:px-5"
             >
               ▶ Watch now
-            </Link>
-            <Link
-              href="#browse-grid"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-700/80 bg-slate-900/60 px-4 py-2 text-xs text-slate-200 hover:border-cyan-500/70 hover:text-cyan-400"
-            >
-              Browse more
             </Link>
           </div>
         </div>

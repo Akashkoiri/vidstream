@@ -3,32 +3,35 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
-import { useEffect, useState } from "react";
+import { SearchDialog } from "@/app/browse/search-dialog";
 
 export function Navbar() {
-  const [user, setUser] = useState<unknown | null>(null);
-
-  useEffect(() => {
-    authClient.getSession().then(({ data }) => {
-      setUser(data?.user ?? null);
-    });
-  }, []);
+  const { data: session, isPending } = authClient.useSession();
+  const user = session?.user ?? null;
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-800 bg-slate-950/80 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+      <div className="mx-auto flex max-w-full items-center justify-between px-4 py-3">
+        {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-500/20 text-cyan-400">
             ▶
           </span>
           <span className="font-semibold tracking-tight">VidStream</span>
         </Link>
+
+        {/* Right side controls */}
         <nav className="flex items-center gap-3">
-          {user ? (
+          {/* 🔍 Search Icon Modal Trigger */}
+          <SearchDialog />
+
+          {/* While session is loading, optionally show nothing or a skeleton */}
+          {isPending ? null : user ? (
             <form
               onSubmit={async (e) => {
                 e.preventDefault();
                 await authClient.signOut();
+                // optional: router.refresh() instead of full reload
                 location.reload();
               }}
             >

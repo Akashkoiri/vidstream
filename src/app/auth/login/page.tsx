@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Spinner } from "@/components/ui/spinner";
+import { SocialAuthButtons } from "@/components/auth/social-buttons";
+import { Separator } from "@/components/ui/separator";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -71,8 +73,21 @@ export default function LoginPage() {
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? <Spinner /> : "Sign in"}
             </Button>
+
+            {/* Divider */}
+            <div className="my-6 flex items-center gap-3">
+              <div className="h-px flex-1 bg-slate-700" />
+              <span className="text-[11px] uppercase text-slate-500">
+                or continue with
+              </span>
+              <div className="h-px flex-1 bg-slate-700" />
+            </div>
+
+            {/* ✅ Same social auth component as register page */}
+            <SocialAuthButtons />
+
             <p className="text-center text-xs text-slate-400">
-              New here?
+              New here?{" "}
               <Link
                 href="/auth/register"
                 className="text-cyan-400 hover:underline"
