@@ -1,16 +1,17 @@
 // src/app/api/playlists/[playlistId]/items/route.ts
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { addItemToPlaylist } from "@/data/playlists";
 
-type Params = {
-  params: {
+type Context = {
+  params: Promise<{
     playlistId: string;
-  };
+  }>;
 };
 
-export async function POST(req: Request, { params }: Params) {
+export async function POST(req: NextRequest, context: Context) {
   try {
-    const { playlistId } = await params;
+    const { playlistId } = await context.params;
+
     const body = await req.json();
     const { tmdbId, mediaType } = body as {
       tmdbId?: string | number;
