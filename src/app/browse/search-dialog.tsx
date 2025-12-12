@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -35,6 +36,8 @@ export function SearchDialog() {
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = query.trim();
@@ -53,15 +56,26 @@ export function SearchDialog() {
     } catch (error) {
       console.error(error);
       setMovies([]);
-      // optional: show toast
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      {/* 🔍 Icon button */}
+    <Dialog
+      open={open}
+      onOpenChange={(v) => {
+        setOpen(v);
+
+        // optional: reset when closing
+        if (!v) {
+          setQuery("");
+          setMovies([]);
+          setHasSearched(false);
+          setIsLoading(false);
+        }
+      }}
+    >
       <DialogTrigger asChild>
         <Button
           variant="outline"
@@ -73,18 +87,31 @@ export function SearchDialog() {
         </Button>
       </DialogTrigger>
 
-      {/* 🪟 Modal content */}
-      <DialogContent className="max-w-3xl sm:max-w-3xl h-[95vh] border-slate-800 bg-slate-950/95">
-        <DialogHeader>
+      <DialogContent
+        // ✅ key changes: flex column + overflow hidden + responsive height/width
+        className="
+          flex flex-col gap-4
+          border-slate-800 bg-slate-950/95
+          sm:max-w-[60vw]       /* ⬅ hard cap */
+          h-[85vh]
+          overflow-hidden
+        "
+        onOpenAutoFocus={(e) => {
+          // optional: focus input when opened
+          e.preventDefault();
+          inputRef.current?.focus();
+        }}
+      >
+        <DialogHeader className="shrink-0">
           <DialogTitle>Search movies</DialogTitle>
           <DialogDescription>
             Search The Movie Database for any title.
           </DialogDescription>
         </DialogHeader>
 
-        {/* Search form */}
-        <form onSubmit={handleSearch} className="flex gap-2">
+        <form onSubmit={handleSearch} className="shrink-0 flex gap-2">
           <Input
+            ref={inputRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search for a movie…"
@@ -96,8 +123,8 @@ export function SearchDialog() {
           </Button>
         </form>
 
-        {/* Results / loading state */}
-        <div className="mt-4 max-h-[400px] space-y-3 overflow-y-auto">
+        {/* ✅ key change: this fills the remaining space and scrolls */}
+        <div className="flex-1 overflow-y-auto pr-1 scrollbar-thin">
           {isLoading && (
             <div className="flex items-center justify-center py-10 text-sm text-slate-400">
               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
@@ -125,7 +152,7 @@ export function SearchDialog() {
                     href={`/watch/movie/${movie.id}`}
                     onClick={() => setOpen(false)}
                   >
-                    <Card className="p-0 gap-0 group overflow-hidden border-slate-800 bg-slate-900/70">
+                    <Card className="group overflow-hidden border-slate-800 bg-slate-900/70 p-0 gap-1">
                       <div className="relative aspect-2/3 w-full bg-slate-800">
                         {poster && (
                           <Image
@@ -137,10 +164,10 @@ export function SearchDialog() {
                         )}
                       </div>
                       <CardContent className="p-2">
-                        <p className="line-clamp-1 text-xs font-medium group-hover:text-cyan-400">
+                        <p className="line-clamp-1 text-s font-medium group-hover:text-cyan-400">
                           {movie.title}
                         </p>
-                        <p className="text-[11px] text-slate-400">{year}</p>
+                        <p className="text-xs text-slate-400">{year}</p>
                       </CardContent>
                     </Card>
                   </Link>

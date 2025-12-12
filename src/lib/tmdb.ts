@@ -103,3 +103,20 @@ export function getImageUrl(
   if (!path) return null;
   return `https://image.tmdb.org/t/p/${size}${path}`;
 }
+
+export async function getMovieById(id: number | string) {
+  const res = await fetch(`${TMDB_BASE_URL}/movie/${id}?language=en-US`, {
+    headers: {
+      accept: "application/json",
+      Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
+    },
+    // tweak if you want SSR-only or ISR, but this is fine:
+    next: { revalidate: 3600 },
+  });
+
+  if (!res.ok) {
+    throw new Error(`TMDB getMovieById error: ${res.status}`);
+  }
+
+  return (await res.json()) as TmdbMovie;
+}

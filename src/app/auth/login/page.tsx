@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Spinner } from "@/components/ui/spinner";
 import { SocialAuthButtons } from "@/components/auth/social-buttons";
-import { Separator } from "@/components/ui/separator";
 
 export default function LoginPage() {
   const router = useRouter();

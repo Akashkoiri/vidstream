@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import { SearchDialog } from "@/app/browse/search-dialog";
+import { Separator } from "./ui/separator";
 
 export function Navbar() {
   const { data: session, isPending } = authClient.useSession();
@@ -22,6 +23,15 @@ export function Navbar() {
 
         {/* Right side controls */}
         <nav className="flex items-center gap-3">
+          <Link
+            href="/playlists"
+            className="text-sm text-slate-200 hover:text-cyan-400"
+          >
+            Playlists
+          </Link>
+
+          <div className="h-5 w-px bg-slate-700/80" />
+
           {/* 🔍 Search Icon Modal Trigger */}
           <SearchDialog />
 

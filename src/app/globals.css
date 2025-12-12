@@ -120,3 +120,29 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+/* Thin scrollbar */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  /* Firefox */
+  scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
+}
+
+/* WebKit (Chrome, Edge, Safari) */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.35);
+  border-radius: 9999px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(148, 163, 184, 0.6);
+}
