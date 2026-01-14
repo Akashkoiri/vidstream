@@ -9,11 +9,11 @@ type WatchClientProps = {
 
 export default function WatchClient({ src }: WatchClientProps) {
   return (
-    <div className="w-full">
-      <div className="relative aspect-video overflow-hidden rounded-3xl border border-slate-800 bg-black shadow-xl">
+    <div className="flex w-full flex-1 flex-col">
+      <div className="relative w-full flex-1 overflow-hidden bg-black">
         <iframe
           src={src}
-          className="absolute inset-0 h-full w-full rounded-3xl"
+          className="absolute inset-0 h-full w-full"
           allowFullScreen
           referrerPolicy="no-referrer"
           sandbox="allow-same-origin allow-scripts allow-fullscreen"

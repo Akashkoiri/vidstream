@@ -80,7 +80,7 @@ function MovieRow({ title, movies }: MovieRowProps) {
       </h3>
       <div className="flex gap-3 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {movies.slice(0, 12).map((movie) => (
-          <div key={movie.id} className="w-50 shrink-0 sm:w-52 md:w-56">
+          <div key={movie.id} className="w-48 shrink-0 sm:w-52 md:w-56">
             {/* Same MovieCard as browse page */}
             <MovieCard movie={movie} />
           </div>

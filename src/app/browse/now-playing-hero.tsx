@@ -58,11 +58,10 @@ export function NowPlayingHero({ movies }: Props) {
             <button
               key={m.id}
               onClick={() => setIndex(i)}
-              className={`h-2 rounded-full transition-all ${
-                i === index
+              className={`h-2 rounded-full transition-all ${i === index
                   ? "w-6 bg-cyan-400"
                   : "w-2 bg-slate-500 hover:bg-slate-300"
-              }`}
+                }`}
             />
           ))}
         </div>
@@ -84,7 +83,7 @@ function HeroSlide({ movie, isActive, index }: SlideProps) {
     : null;
 
   return (
-    <article className="relative min-w-full overflow-hidden h-[65vh] sm:h-[70vh] md:h-[75vh] flex items-center">
+    <article className="relative flex min-w-full items-end overflow-hidden h-[65vh] pb-16 sm:h-[70vh] md:h-[75vh]">
       {/* BACKDROP IMAGE */}
       {backdrop && (
         <div className="absolute inset-0">
@@ -93,9 +92,8 @@ function HeroSlide({ movie, isActive, index }: SlideProps) {
             alt={movie.title}
             fill
             priority={index === 0}
-            className={`object-cover transition-opacity duration-700 ${
-              isActive ? "opacity-45" : "opacity-30"
-            }`}
+            className={`object-cover transition-opacity duration-700 ${isActive ? "opacity-45" : "opacity-30"
+              }`}
           />
           {/* DARK GRADIENT */}
           <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/70 to-transparent" />
@@ -103,7 +101,7 @@ function HeroSlide({ movie, isActive, index }: SlideProps) {
       )}
 
       {/* TEXT CONTENT */}
-      <div className="relative z-10 max-w-4xl px-6 sm:px-10 md:px-14 translate-y-[30%]">
+      <div className="relative z-10 max-w-4xl px-4 sm:px-10 md:px-14">
         <p className="text-sm uppercase tracking-widest text-cyan-300/80">
           Now Playing
         </p>

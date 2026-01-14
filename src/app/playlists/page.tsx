@@ -56,7 +56,7 @@ export default async function PlaylistsPage() {
   );
 
   return (
-    <div className="mx-auto space-y-6 px-6 py-8">
+    <div className="mx-auto w-full max-w-7xl space-y-6 px-4 py-8 sm:px-6">
       <div className="mb-2 flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-slate-50">Your Playlists</h1>
         <div className="flex items-center gap-2">

@@ -24,10 +24,10 @@ export function MoviesGrid({ movies, page, totalPages, sort }: Props) {
       <div
         className="
           grid w-full max-w-full
-          grid-cols-3 gap-3
-          xs:grid-cols-3
-          sm:grid-cols-4
-          md:grid-cols-5
+          grid-cols-2 gap-3
+          xs:grid-cols-2
+          sm:grid-cols-3
+          md:grid-cols-4
         "
       >
         {movies.map((movie) => (

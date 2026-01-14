@@ -35,7 +35,7 @@ export default async function WatchPage({ params }: Props) {
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] flex-col">
-      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-4 px-4 py-4">
+      <div className="flex w-full flex-1 flex-col">
         <WatchClient
           src={embedUrl.toString()}
           userId={userId}
