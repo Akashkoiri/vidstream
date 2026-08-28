@@ -10,7 +10,7 @@ import {
 import { PlaylistModal } from "@/components/playlist-modal";
 
 type PlaylistModalContextValue = {
-  open: (movieId: number) => void;
+  open: (movieId: number, mediaType?: "movie" | "tv") => void;
   close: () => void;
 };
 
@@ -20,9 +20,11 @@ const PlaylistModalContext = createContext<PlaylistModalContextValue | null>(
 
 export function PlaylistModalProvider({ children }: { children: ReactNode }) {
   const [movieId, setMovieId] = useState<number | null>(null);
+  const [mediaType, setMediaType] = useState<"movie" | "tv">("movie");
 
-  const open = useCallback((id: number) => {
+  const open = useCallback((id: number, type: "movie" | "tv" = "movie") => {
     setMovieId(id);
+    setMediaType(type);
   }, []);
 
   const close = useCallback(() => {
@@ -33,7 +35,7 @@ export function PlaylistModalProvider({ children }: { children: ReactNode }) {
     <PlaylistModalContext.Provider value={{ open, close }}>
       {children}
 
-      {movieId !== null && <PlaylistModal movieId={movieId} onClose={close} />}
+      {movieId !== null && <PlaylistModal movieId={movieId} mediaType={mediaType} onClose={close} />}
     </PlaylistModalContext.Provider>
   );
 }

@@ -1,6 +1,6 @@
 // app/api/search/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { searchMovies } from "@/lib/tmdb"; // add this function if not already
+import { searchMedia } from "@/lib/tmdb";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -9,16 +9,16 @@ export async function GET(req: NextRequest) {
   const page = Number(pageParam) > 0 ? Number(pageParam) : 1;
 
   if (!query.trim()) {
-    return NextResponse.json({ movies: [], totalPages: 0 });
+    return NextResponse.json({ results: [], totalPages: 0 });
   }
 
   try {
-    const { movies, totalPages } = await searchMovies({ query, page });
-    return NextResponse.json({ movies, totalPages });
+    const { results, totalPages } = await searchMedia({ query, page });
+    return NextResponse.json({ results, totalPages });
   } catch (error) {
     console.error("TMDB search error:", error);
     return NextResponse.json(
-      { error: "Failed to search movies" },
+      { error: "Failed to search media" },
       { status: 500 }
     );
   }

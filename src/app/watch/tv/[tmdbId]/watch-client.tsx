@@ -35,7 +35,7 @@ export default function WatchClient({ src, userId, tmdbId }: WatchClientProps) {
           body: JSON.stringify({
             userId,
             tmdbId,
-            mediaType: player_info.mediaType || "movie",
+            mediaType: player_info.mediaType || "tv",
             season: player_info.season ? parseInt(player_info.season) : null,
             episode: player_info.episode ? parseInt(player_info.episode) : null,
             currentTime: Math.floor(player_progress),

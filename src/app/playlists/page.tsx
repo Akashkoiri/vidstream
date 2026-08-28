@@ -2,14 +2,26 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@/db";
-import { getMovieById, type TmdbMovie } from "@/lib/tmdb";
+import { getMovieById, getTvShowById, type TmdbMedia } from "@/lib/tmdb";
 import { deletePlaylistAction, removePlaylistItemAction } from "./actions";
 import { Card, CardContent } from "@/components/ui/card";
 import { MovieCard } from "@/components/movie-card";
 import { CreatePlaylistButton } from "./create-playlist-button";
 import { headers } from "next/headers";
-import { DeleteButton } from "./delete-button";
+import { DeleteButton, SubmitButton } from "./delete-button";
 import { RefreshPlaylistsButton } from "./refresh-playlists-button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 
 export const dynamic = "force-dynamic"; // optional
 
@@ -17,7 +29,7 @@ export default async function PlaylistsPage() {
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session?.user?.id) {
-    redirect("/login"); // adjust to your auth route
+    redirect("/auth/login");
   }
 
   const userId = session.user.id;
@@ -37,16 +49,18 @@ export default async function PlaylistsPage() {
     userPlaylists.map(async (pl) => {
       const itemsWithMovie = await Promise.all(
         pl.items.map(async (item) => {
-          if (item.mediaType !== "movie") {
-            return { item, movie: null as TmdbMovie | null };
-          }
-
           try {
-            const movie = await getMovieById(item.tmdbId);
-            // `getMovieById` should already return something compatible with TmdbMovie
-            return { item, movie: movie as TmdbMovie };
+            let media: TmdbMedia | null = null;
+            if (item.mediaType === "movie") {
+              media = await getMovieById(item.tmdbId) as TmdbMedia;
+              media.media_type = "movie";
+            } else if (item.mediaType === "tv") {
+              media = await getTvShowById(item.tmdbId) as TmdbMedia;
+              media.media_type = "tv";
+            }
+            return { item, movie: media };
           } catch {
-            return { item, movie: null as TmdbMovie | null };
+            return { item, movie: null as TmdbMedia | null };
           }
         })
       );
@@ -86,15 +100,32 @@ export default async function PlaylistsPage() {
                 )}
               </div>
 
-              <form action={deletePlaylistAction}>
-                <input type="hidden" name="playlistId" value={pl.id} />
-                <button
-                  type="submit"
-                  className="rounded bg-red-500/10 px-3 py-1 text-xs text-red-400 hover:bg-red-500/20"
-                >
-                  Delete playlist
-                </button>
-              </form>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <button className="flex items-center justify-center p-1 text-red-400 hover:text-red-300 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent className="border-slate-800 bg-slate-950 text-slate-50 sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Delete Playlist</DialogTitle>
+                      <DialogDescription className="text-slate-400">
+                        Are you sure you want to delete this entire playlist? This action cannot be undone.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                      <DialogClose asChild>
+                        <Button variant="outline" className="border-slate-800 bg-transparent text-slate-300 hover:bg-slate-800 hover:text-slate-50">
+                          Cancel
+                        </Button>
+                      </DialogClose>
+                      <form action={deletePlaylistAction}>
+                        <input type="hidden" name="playlistId" value={pl.id} />
+                        <SubmitButton variant="destructive" text="Delete Playlist" />
+                      </form>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
             </div>
 
             {/* Playlist items rendered with MovieCard */}

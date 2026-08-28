@@ -28,8 +28,9 @@ export default async function WatchPage({ params }: Props) {
   }
 
 
-  const embedUrl = new URL(`https://vidsrc2.ru/embed/movie/${tmdbId}`);
+  const embedUrl = new URL(`https://vidsrc2.ru/embed/tv/${tmdbId}`);
   embedUrl.searchParams.set("autoplay", "1");
+  embedUrl.searchParams.set("autonext", "1");
   if (startSeconds > 0)
     embedUrl.searchParams.set("startAt", String(startSeconds));
 

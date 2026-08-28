@@ -7,6 +7,7 @@ export const browseSearchParams = {
     "top_rated",
     "upcoming",
   ] as const).withDefault("popular"),
+  type: parseAsStringEnum(["movie", "tv"] as const).withDefault("movie"),
 };
 
 export const loadBrowseSearchParams = createLoader(browseSearchParams);

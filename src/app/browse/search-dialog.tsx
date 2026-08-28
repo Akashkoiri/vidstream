@@ -18,12 +18,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-type Movie = {
+type Media = {
   id: number;
-  title: string;
-  release_date: string | null;
+  title?: string;
+  name?: string;
+  release_date?: string | null;
+  first_air_date?: string | null;
   poster_path: string | null;
   overview?: string | null;
+  media_type: "movie" | "tv";
 };
 
 const getImageUrl = (path: string | null) =>
@@ -32,7 +35,7 @@ const getImageUrl = (path: string | null) =>
 export function SearchDialog() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [movies, setMovies] = useState<Movie[]>([]);
+  const [media, setMedia] = useState<Media[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
@@ -52,10 +55,10 @@ export function SearchDialog() {
       if (!res.ok) throw new Error("Search failed");
 
       const data = await res.json();
-      setMovies(data.movies ?? []);
+      setMedia(data.results ?? []);
     } catch (error) {
       console.error(error);
-      setMovies([]);
+      setMedia([]);
     } finally {
       setIsLoading(false);
     }
@@ -70,7 +73,7 @@ export function SearchDialog() {
         // optional: reset when closing
         if (!v) {
           setQuery("");
-          setMovies([]);
+          setMedia([]);
           setHasSearched(false);
           setIsLoading(false);
         }
@@ -83,7 +86,7 @@ export function SearchDialog() {
           className="rounded-full border-slate-700 bg-slate-900/70"
         >
           <Search className="h-4 w-4" />
-          <span className="sr-only">Search movies</span>
+          <span className="sr-only">Search</span>
         </Button>
       </DialogTrigger>
 
@@ -92,7 +95,7 @@ export function SearchDialog() {
         className="
           flex flex-col gap-4
           border-slate-800 bg-slate-950/95
-          sm:max-w-[60vw]       /* ⬅ hard cap */
+          sm:max-w-[80vw] lg:max-w-4xl       /* ⬅ hard cap */
           h-[85vh]
           overflow-hidden
         "
@@ -103,9 +106,9 @@ export function SearchDialog() {
         }}
       >
         <DialogHeader className="shrink-0">
-          <DialogTitle>Search movies</DialogTitle>
+          <DialogTitle>Search</DialogTitle>
           <DialogDescription>
-            Search The Movie Database for any title.
+            Search The Movie Database for movies and TV shows.
           </DialogDescription>
         </DialogHeader>
 
@@ -114,7 +117,7 @@ export function SearchDialog() {
             ref={inputRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search for a movie…"
+            placeholder="Search for movies and TV shows…"
             className="flex-1 bg-slate-900/80"
           />
           <Button type="submit" disabled={isLoading}>
@@ -132,40 +135,43 @@ export function SearchDialog() {
             </div>
           )}
 
-          {!isLoading && !movies.length && hasSearched && (
+          {!isLoading && !media.length && hasSearched && (
             <p className="py-4 text-sm text-slate-400">
               No results found for “{query.trim()}”.
             </p>
           )}
 
-          {!isLoading && movies.length > 0 && (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {movies.map((movie) => {
-                const poster = getImageUrl(movie.poster_path);
-                const year = movie.release_date
-                  ? new Date(movie.release_date).getFullYear()
-                  : "—";
+          {!isLoading && media.length > 0 && (
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-5">
+              {media.map((item) => {
+                const poster = getImageUrl(item.poster_path);
+                const date = item.release_date || item.first_air_date;
+                const year = date ? new Date(date).getFullYear() : "—";
+                const title = item.title || item.name;
 
                 return (
                   <Link
-                    key={movie.id}
-                    href={`/watch/movie/${movie.id}`}
+                    key={item.id}
+                    href={`/watch/${item.media_type}/${item.id}`}
                     onClick={() => setOpen(false)}
                   >
-                    <Card className="group overflow-hidden border-slate-800 bg-slate-900/70 p-0 gap-1">
+                    <Card className="group overflow-hidden border-slate-800 bg-slate-900/70 p-0 gap-1 h-full">
                       <div className="relative aspect-2/3 w-full bg-slate-800">
                         {poster && (
                           <Image
                             src={poster}
-                            alt={movie.title}
+                            alt={title ?? "Media"}
                             fill
                             className="object-cover"
                           />
                         )}
+                        <div className="absolute top-2 right-2 rounded bg-black/60 px-1.5 py-0.5 text-[10px] font-medium text-white backdrop-blur-md">
+                          {item.media_type === "movie" ? "Movie" : "TV"}
+                        </div>
                       </div>
                       <CardContent className="p-2">
-                        <p className="line-clamp-1 text-s font-medium group-hover:text-cyan-400">
-                          {movie.title}
+                        <p className="line-clamp-1 text-sm font-medium group-hover:text-cyan-400">
+                          {title}
                         </p>
                         <p className="text-xs text-slate-400">{year}</p>
                       </CardContent>

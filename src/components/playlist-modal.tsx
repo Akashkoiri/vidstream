@@ -15,9 +15,11 @@ type PlaylistsResponse = {
 
 export function PlaylistModal({
   movieId,
+  mediaType = "movie",
   onClose,
 }: {
   movieId: number;
+  mediaType?: "movie" | "tv";
   onClose: () => void;
 }) {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
@@ -56,7 +58,7 @@ export function PlaylistModal({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           tmdbId: movieId,
-          mediaType: "movie",
+          mediaType: mediaType,
         }),
       });
 

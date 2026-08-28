@@ -1,6 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export function CreatePlaylistModal({
   open,
@@ -13,8 +21,6 @@ export function CreatePlaylistModal({
 }) {
   const [loading, setLoading] = useState(false);
 
-  if (!open) return null;
-
   async function handleSubmit(formData: FormData) {
     setLoading(true);
     await action(formData);
@@ -23,45 +29,48 @@ export function CreatePlaylistModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="w-full max-w-sm rounded-xl bg-neutral-900 p-5 shadow-lg">
-        <h2 className="mb-4 text-lg font-semibold text-white">
-          Create Playlist
-        </h2>
+    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Create Playlist</DialogTitle>
+          <DialogDescription className="text-slate-400">
+            Add a new playlist to organize your favorite movies and shows.
+          </DialogDescription>
+        </DialogHeader>
 
         <form action={handleSubmit} className="space-y-4">
           <input
             name="title"
             placeholder="Playlist Title"
-            className="w-full rounded bg-neutral-800 px-3 py-2 text-sm text-white placeholder-neutral-500"
+            className="w-full rounded-md border border-slate-800 bg-slate-900/50 px-3 py-2 text-sm text-slate-50 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-600/50 transition-all"
             required
           />
 
           <textarea
             name="description"
             placeholder="Description (optional)"
-            className="w-full rounded bg-neutral-800 px-3 py-2 text-sm text-white placeholder-neutral-500"
+            className="w-full rounded-md border border-slate-800 bg-slate-900/50 px-3 py-2 text-sm text-slate-50 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-600/50 transition-all"
             rows={2}
           />
 
-          <div className="flex items-center justify-end gap-2">
+          <DialogFooter className="mt-4">
             <button
               type="button"
               onClick={onClose}
-              className="rounded px-3 py-1 text-sm text-neutral-400 hover:text-neutral-200"
+              className="rounded-md px-4 py-2 text-sm text-slate-300 hover:bg-slate-800 hover:text-slate-50 transition-colors"
             >
               Cancel
             </button>
-
             <button
               disabled={loading}
-              className="rounded bg-cyan-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-cyan-700"
+              type="submit"
+              className="rounded-md bg-cyan-600 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-700 transition-colors disabled:opacity-50"
             >
               {loading ? "Creating..." : "Create"}
             </button>
-          </div>
+          </DialogFooter>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

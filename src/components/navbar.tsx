@@ -77,7 +77,7 @@ function AuthButtons({
           size="sm"
           className="w-full bg-cyan-500 px-4 text-slate-950 hover:bg-cyan-400 sm:w-auto"
         >
-          Get started
+          Sign Up
         </Button>
       </Link>
     </div>

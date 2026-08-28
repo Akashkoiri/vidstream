@@ -3,11 +3,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { PaginationControls } from "../pagination-controls";
-import { getImageUrl, type TmdbMovie } from "@/lib/tmdb";
+import { getImageUrl, type TmdbMedia } from "@/lib/tmdb";
 
 type Props = {
   query: string;
-  movies: TmdbMovie[];
+  movies: TmdbMedia[];
   page: number;
   totalPages: number;
 };
@@ -57,19 +57,22 @@ export function SearchResultsGrid({ query, movies, page, totalPages }: Props) {
         "
       >
         {movies.map((m) => {
-          const year = m.release_date
-            ? new Date(m.release_date).getFullYear()
+          const dateStr = m.release_date || m.first_air_date;
+          const year = dateStr
+            ? new Date(dateStr).getFullYear()
             : "—";
+          const title = m.title || m.name || "Untitled";
+          const type = m.media_type || (m.name ? "tv" : "movie");
           const poster = getImageUrl(m.poster_path);
 
           return (
-            <Link key={m.id} href={`/watch/movie/${m.id}`} className="block">
+            <Link key={m.id} href={`/watch/${type}/${m.id}`} className="block">
               <Card className="group overflow-hidden rounded-lg border-slate-800 bg-slate-900/70 p-0">
                 <div className="relative aspect-[2/3] w-full bg-gradient-to-br from-slate-800 to-slate-900">
                   {poster && (
                     <Image
                       src={poster}
-                      alt={m.title}
+                      alt={title}
                       fill
                       sizes="(min-width: 1024px) 15vw, (min-width: 640px) 25vw, 33vw"
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -78,7 +81,7 @@ export function SearchResultsGrid({ query, movies, page, totalPages }: Props) {
                 </div>
                 <CardContent className="space-y-1 p-1.5 sm:p-2">
                   <p className="line-clamp-1 text-[11px] font-medium sm:text-xs group-hover:text-cyan-400">
-                    {m.title}
+                    {title}
                   </p>
                   <p className="text-[10px] text-slate-400 sm:text-[11px]">
                     {year}

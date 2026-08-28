@@ -3,7 +3,7 @@ import Link from "next/link";
 import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
-import { getMovies, getNowPlayingMovies, type TmdbMovie } from "@/lib/tmdb";
+import { getMedia, getTrendingMedia, getNowPlayingMovies, getMediaByProvider, type TmdbMedia } from "@/lib/tmdb";
 import { NowPlayingHero } from "@/app/browse/now-playing-hero";
 import { MovieCard } from "@/components/movie-card";
 
@@ -12,15 +12,25 @@ export default async function Home() {
   const username = session?.user.email?.split("@")[0] ?? "Guest";
 
   const [
-    { movies: popular },
-    { movies: topRated },
-    { movies: upcoming },
+    { media: trendingMovies },
+    { media: topRatedMovies },
+    { media: trendingTv },
+    { media: topRatedTv },
     nowPlaying,
+    { media: netflixMovies },
+    { media: primeMovies },
+    { media: disneyMovies },
+    { media: maxMovies },
   ] = await Promise.all([
-    getMovies({ page: 1, sort: "popular" }),
-    getMovies({ page: 1, sort: "top_rated" }),
-    getMovies({ page: 1, sort: "upcoming" }),
+    getTrendingMedia({ type: "movie", timeWindow: "day" }),
+    getMedia({ type: "movie", page: 1, sort: "top_rated" }),
+    getTrendingMedia({ type: "tv", timeWindow: "day" }),
+    getMedia({ type: "tv", page: 1, sort: "top_rated" }),
     getNowPlayingMovies(),
+    getMediaByProvider({ providerId: 8, type: "movie" }),
+    getMediaByProvider({ providerId: 9, type: "movie" }),
+    getMediaByProvider({ providerId: 337, type: "movie" }),
+    getMediaByProvider({ providerId: 1899, type: "movie" }),
   ]);
 
   return (
@@ -56,9 +66,14 @@ export default async function Home() {
           {/* ROWS */}
           <section className="space-y-8 pt-4">
             <div className="space-y-6">
-              <MovieRow title="Trending Now" movies={popular} />
-              <MovieRow title="Top Rated" movies={topRated} />
-              <MovieRow title="Coming Soon" movies={upcoming} />
+              <MovieRow title="Trending Movies" media={trendingMovies} />
+              <MovieRow title="Trending TV Shows" media={trendingTv} />
+              <MovieRow title="Popular on Netflix" media={netflixMovies} />
+              <MovieRow title="Popular on Prime Video" media={primeMovies} />
+              <MovieRow title="Popular on Disney+" media={disneyMovies} />
+              <MovieRow title="Popular on Max" media={maxMovies} />
+              <MovieRow title="Top Rated Movies" media={topRatedMovies} />
+              <MovieRow title="Top Rated TV Shows" media={topRatedTv} />
             </div>
           </section>
         </div>
@@ -69,20 +84,19 @@ export default async function Home() {
 
 type MovieRowProps = {
   title: string;
-  movies: TmdbMovie[];
+  media: TmdbMedia[];
 };
 
-function MovieRow({ title, movies }: MovieRowProps) {
+function MovieRow({ title, media }: MovieRowProps) {
   return (
     <div className="space-y-3">
       <h3 className="text-sm font-medium text-slate-100 sm:text-base">
         {title}
       </h3>
       <div className="flex gap-3 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {movies.slice(0, 12).map((movie) => (
-          <div key={movie.id} className="w-48 shrink-0 sm:w-52 md:w-56">
-            {/* Same MovieCard as browse page */}
-            <MovieCard movie={movie} />
+        {media.slice(0, 12).map((item) => (
+          <div key={item.id} className="w-28 shrink-0 sm:w-40 md:w-48 lg:w-56">
+            <MovieCard movie={item} />
           </div>
         ))}
       </div>
