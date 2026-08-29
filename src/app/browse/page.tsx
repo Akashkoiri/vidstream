@@ -57,7 +57,7 @@ export default async function BrowsePage({ searchParams }: BrowsePageProps) {
   const suspenseKey = `${type}-${sort}-${page}`;
 
   return (
-    <div className="mx-auto flex w-full flex-col space-y-8 px-3 pt-20 pb-6 sm:px-4 sm:pt-24 sm:pb-8">
+    <div className="mx-auto flex w-full flex-col space-y-8 px-3 pt-16 pb-6 sm:px-4 sm:pb-8">
       <Suspense key={suspenseKey} fallback={<div className="flex w-full items-center justify-center py-20"><Spinner /></div>}>
         <div id="browse-grid">
           <BrowseData type={type} page={page} sort={sort} />

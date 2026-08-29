@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 
 export function Footer() {
   const pathname = usePathname();
-  if (pathname.startsWith("/watch")) return null;
+  if (pathname.startsWith("/watch") || pathname.startsWith("/auth")) return null;
 
   return (
     <footer className="w-full border-t border-white/5 bg-black">

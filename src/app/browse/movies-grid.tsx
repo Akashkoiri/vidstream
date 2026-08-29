@@ -39,7 +39,7 @@ export function MoviesGrid({ media, page, totalPages, sort, type }: Props) {
       <div
         className="
           grid w-full max-w-full
-          grid-cols-2 gap-4
+          grid-cols-3 gap-4
           sm:grid-cols-4
           md:grid-cols-5
           lg:grid-cols-6

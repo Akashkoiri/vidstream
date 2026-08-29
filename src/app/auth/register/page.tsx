@@ -47,13 +47,13 @@ export default function RegisterPage() {
       return;
     }
 
-    router.push("/browse");
+    router.push("/");
     router.refresh();
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4">
-      <Card className="w-full max-w-md border-slate-800 bg-slate-900/70">
+    <div className="flex min-h-screen items-center justify-center px-4 py-8">
+      <Card className="w-full max-w-md border-zinc-800 bg-zinc-900/50 backdrop-blur-sm">
         <CardHeader>
           <CardTitle className="text-xl">Create your account</CardTitle>
         </CardHeader>
@@ -62,34 +62,36 @@ export default function RegisterPage() {
           <form className="space-y-4" onSubmit={onSubmit}>
             {/* email */}
             <div className="space-y-1">
-              <label className="text-sm text-slate-200">Email</label>
+              <label className="text-sm text-zinc-300">Email</label>
               <Input
                 type="email"
                 autoComplete="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-slate-900/70"
+                className="bg-zinc-900/50 border-zinc-800 focus-visible:ring-zinc-700"
               />
             </div>
 
             {/* password */}
             <div className="space-y-1">
-              <label className="text-sm text-slate-200">Password</label>
+              <label className="text-sm text-zinc-300">Password</label>
               <PasswordInput
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="bg-zinc-900/50 border-zinc-800 focus-visible:ring-zinc-700"
               />
             </div>
 
             {/* confirm password */}
             <div className="space-y-1">
-              <label className="text-sm text-slate-200">Confirm Password</label>
+              <label className="text-sm text-zinc-300">Confirm Password</label>
               <PasswordInput
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
                 required
+                className="bg-zinc-900/50 border-zinc-800 focus-visible:ring-zinc-700"
               />
             </div>
 
@@ -101,22 +103,22 @@ export default function RegisterPage() {
 
             {/* Divider */}
             <div className="my-6 flex items-center gap-3">
-              <div className="h-px flex-1 bg-slate-700" />
-              <span className="text-[11px] uppercase text-slate-500">
+              <div className="h-px flex-1 bg-zinc-800" />
+              <span className="text-[11px] uppercase text-zinc-500">
                 or continue with
               </span>
-              <div className="h-px flex-1 bg-slate-700" />
+              <div className="h-px flex-1 bg-zinc-800" />
             </div>
 
             {/* ⭐ Social Auth Buttons ⭐ */}
             <SocialAuthButtons />
 
             {/* redirect */}
-            <p className="text-center text-xs text-slate-400">
+            <p className="text-center text-xs text-zinc-400">
               Already have an account?{" "}
               <Link
                 href="/auth/login"
-                className="text-cyan-400 hover:underline"
+                className="text-zinc-100 font-medium hover:underline"
               >
                 Sign in
               </Link>

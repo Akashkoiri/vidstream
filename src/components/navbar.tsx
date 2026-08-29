@@ -7,6 +7,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -51,15 +52,21 @@ function AuthButtons({
   isPending,
   onLinkClick,
 }: {
-  user: unknown;
+  user: any;
   isPending: boolean;
   onLinkClick?: () => void;
 }) {
-  if (isPending) return null;
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted || isPending) return null;
 
   if (user) {
     return (
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
@@ -70,7 +77,18 @@ function AuthButtons({
             <span className="sr-only">Toggle user menu</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-48 bg-zinc-950 border-zinc-800 text-zinc-200">
+        <DropdownMenuContent align="end" className="w-56 bg-zinc-950 border-zinc-800 text-zinc-200">
+          {(user?.name || user?.email) && (
+            <>
+              <DropdownMenuLabel className="font-normal">
+                <div className="flex flex-col space-y-1">
+                  {user?.name && <p className="text-sm font-medium leading-none text-white">{user.name}</p>}
+                  {user?.email && <p className="text-xs leading-none text-zinc-400">{user.email}</p>}
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator className="bg-zinc-800" />
+            </>
+          )}
           <DropdownMenuItem asChild className="cursor-pointer hover:bg-zinc-800 hover:text-white focus:bg-zinc-800 focus:text-white">
             <Link href="/playlists" onClick={onLinkClick} className="flex items-center w-full">
               <ListVideo className="mr-2 h-4 w-4" />
@@ -132,7 +150,7 @@ export function Navbar() {
   const isHomePage = pathname === "/";
   const isSolid = !isHomePage || scrolled;
 
-  if (pathname.startsWith("/watch")) return null;
+  if (pathname.startsWith("/watch") || pathname.startsWith("/auth")) return null;
 
   return (
     <header 

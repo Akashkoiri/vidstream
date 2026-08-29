@@ -35,7 +35,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen w-full bg-transparent text-zinc-50">
-      <main className="mx-auto flex max-w-full flex-col gap-5">
+      <div className="mx-auto flex max-w-full flex-col gap-5">
         {/* HERO: TMDB carousel */}
         {nowPlaying.length > 0 && (
           <section>
@@ -71,7 +71,7 @@ export default async function Home() {
             </div>
           </section>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
