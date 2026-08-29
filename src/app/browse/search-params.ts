@@ -6,6 +6,11 @@ export const browseSearchParams = {
     "popular",
     "top_rated",
     "upcoming",
+    "trending",
+    "netflix",
+    "prime",
+    "disney",
+    "max"
   ] as const).withDefault("popular"),
   type: parseAsStringEnum(["movie", "tv"] as const).withDefault("movie"),
 };

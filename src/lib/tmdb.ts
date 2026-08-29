@@ -13,6 +13,7 @@ export type TmdbMedia = {
   backdrop_path?: string;
   overview?: string;
   media_type?: "movie" | "tv";
+  vote_average?: number;
 };
 
 export async function getMedia(options: {
@@ -69,11 +70,12 @@ export async function getMedia(options: {
 export async function getTrendingMedia(options: {
   type: "movie" | "tv" | "all";
   timeWindow?: "day" | "week";
+  page?: number;
 }) {
-  const { type, timeWindow = "day" } = options;
+  const { type, timeWindow = "day", page = 1 } = options;
   
   const res = await fetch(
-    `${TMDB_BASE_URL}/trending/${type}/${timeWindow}?language=en-US`,
+    `${TMDB_BASE_URL}/trending/${type}/${timeWindow}?language=en-US&page=${page}`,
     {
       headers: {
         accept: "application/json",
@@ -200,14 +202,15 @@ export async function getTvShowById(id: number | string) {
 export async function getMediaByProvider(options: {
   providerId: number;
   type?: "movie" | "tv";
+  page?: number;
 }) {
-  const { providerId, type = "movie" } = options;
+  const { providerId, type = "movie", page = 1 } = options;
   
   const params = new URLSearchParams({
     with_watch_providers: String(providerId),
     watch_region: "US",
     language: "en-US",
-    page: "1",
+    page: String(page),
     sort_by: "popularity.desc"
   });
 

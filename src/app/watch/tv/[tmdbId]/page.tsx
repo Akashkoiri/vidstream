@@ -27,20 +27,13 @@ export default async function WatchPage({ params }: Props) {
     startSeconds = progress?.currentTime ?? 0;
   }
 
-
-  const embedUrl = new URL(`https://vidsrc2.ru/embed/tv/${tmdbId}`);
-  embedUrl.searchParams.set("autoplay", "1");
-  embedUrl.searchParams.set("autonext", "1");
-  if (startSeconds > 0)
-    embedUrl.searchParams.set("startAt", String(startSeconds));
-
   return (
     <div className="flex min-h-[calc(100vh-4rem)] flex-col">
       <div className="flex w-full flex-1 flex-col">
         <WatchClient
-          src={embedUrl.toString()}
-          userId={userId}
           tmdbId={tmdbId}
+          userId={userId}
+          startSeconds={startSeconds}
         />
       </div>
     </div>

@@ -76,21 +76,21 @@ export function PlaylistModal({
 
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 backdrop-blur-sm pointer-events-none">
-      <div className="pointer-events-auto w-full max-w-md rounded-2xl border border-slate-700 bg-slate-900/95 shadow-2xl">
+      <div className="pointer-events-auto w-full max-w-md rounded-2xl border border-zinc-700 bg-zinc-900/95 shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
+        <div className="flex items-center justify-between border-b border-zinc-800 px-5 py-4">
           <div>
-            <h2 className="text-lg font-semibold text-slate-50">
+            <h2 className="text-lg font-semibold text-zinc-50">
               Add to Playlist
             </h2>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-zinc-400">
               Choose a playlist to save this movie.
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full px-2 py-1 text-sm text-slate-400 hover:bg-slate-800 hover:text-slate-100"
+            className="rounded-full px-2 py-1 text-sm text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
           >
             ✕
           </button>
@@ -106,15 +106,15 @@ export function PlaylistModal({
 
           {loadingPlaylists ? (
             <div className="space-y-2">
-              <div className="h-9 w-full animate-pulse rounded-md bg-slate-800" />
-              <div className="h-9 w-full animate-pulse rounded-md bg-slate-800" />
-              <div className="h-9 w-2/3 animate-pulse rounded-md bg-slate-800" />
+              <div className="h-9 w-full animate-pulse rounded-md bg-zinc-800" />
+              <div className="h-9 w-full animate-pulse rounded-md bg-zinc-800" />
+              <div className="h-9 w-2/3 animate-pulse rounded-md bg-zinc-800" />
             </div>
           ) : playlists.length === 0 ? (
-            <div className="rounded-md border border-dashed border-slate-700 bg-slate-900/60 px-4 py-6 text-center text-sm text-slate-400">
+            <div className="rounded-md border border-dashed border-zinc-700 bg-zinc-900/60 px-4 py-6 text-center text-sm text-zinc-400">
               You don&apos;t have any playlists yet.
               <br />
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-zinc-500">
                 Create one from the Playlists page.
               </span>
             </div>
@@ -125,10 +125,10 @@ export function PlaylistModal({
                   key={p.id}
                   disabled={adding}
                   onClick={() => add(p.id)}
-                  className="flex w-full items-center justify-between rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-left text-sm text-slate-100 transition hover:border-cyan-500/70 hover:bg-slate-800"
+                  className="group flex w-full items-center justify-between rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-left text-sm text-zinc-100 transition hover:border-zinc-500 hover:bg-zinc-800"
                 >
                   <span className="truncate">{p.title}</span>
-                  <span className="text-[10px] text-cyan-400">
+                  <span className="text-[10px] text-zinc-400 transition-colors group-hover:text-zinc-100">
                     {adding ? <Spinner /> : <PlusIcon />}
                   </span>
                 </button>
@@ -138,11 +138,11 @@ export function PlaylistModal({
         </div>
 
         {/* Footer */}
-        <div className="border-t border-slate-800 px-5 py-3">
+        <div className="border-t border-zinc-800 px-5 py-3">
           <button
             type="button"
             onClick={onClose}
-            className="w-full rounded-lg bg-transparent py-1.5 text-sm text-slate-400 hover:bg-slate-800 hover:text-slate-100"
+            className="w-full rounded-lg bg-transparent py-1.5 text-sm text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
           >
             Close
           </button>

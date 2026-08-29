@@ -11,7 +11,7 @@ export function CreatePlaylistButton() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="rounded bg-cyan-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-cyan-700"
+        className="rounded-md bg-white px-3 py-1.5 text-sm font-medium text-black hover:bg-zinc-200 transition-colors shadow-[0_0_15px_rgba(255,255,255,0.15)]"
       >
         + Create Playlist
       </button>

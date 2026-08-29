@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 import {
   Pagination,
   PaginationContent,
@@ -32,9 +34,13 @@ export function PaginationControls({ page, totalPages }: Props) {
     setPage(clamped, {
       shallow: false,
       history: "push",
-      scroll: true,
+      scroll: false,
     });
   };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page]);
 
   const createPageNumbers = () => {
     const pages: (number | "...")[] = [];

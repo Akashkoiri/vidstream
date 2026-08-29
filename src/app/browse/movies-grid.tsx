@@ -5,17 +5,27 @@ import { SortTabs } from "./sort-tabs";
 import { TypeTabs } from "./type-tabs";
 import { MovieCard } from "@/components/movie-card";
 
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+
 type Props = {
   media: TmdbMedia[];
   page: number;
   totalPages: number;
-  sort: "popular" | "top_rated" | "upcoming";
+  sort: "popular" | "top_rated" | "upcoming" | "trending" | "netflix" | "prime" | "disney" | "max";
   type: "movie" | "tv";
 };
 
 export function MoviesGrid({ media, page, totalPages, sort, type }: Props) {
   return (
     <section className="w-full max-w-full space-y-4">
+      <Link 
+        href="/"
+        className="inline-flex items-center text-sm font-medium text-zinc-400 hover:text-white transition-colors mb-4 -mt-4 sm:-mt-6"
+      >
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Back to Home
+      </Link>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-base font-medium sm:text-lg">
           Browse {type === "movie" ? "Movies" : "TV Shows"}

@@ -70,9 +70,9 @@ export default async function PlaylistsPage() {
   );
 
   return (
-    <div className="mx-auto w-full max-w-7xl space-y-6 px-4 py-8 sm:px-6">
+    <div className="mx-auto w-full max-w-7xl space-y-6 px-4 pt-24 pb-8 sm:px-6 sm:pt-28">
       <div className="mb-2 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-slate-50">Your Playlists</h1>
+        <h1 className="text-2xl font-semibold text-zinc-50">Your Playlists</h1>
         <div className="flex items-center gap-2">
           <RefreshPlaylistsButton />
           <CreatePlaylistButton />
@@ -80,7 +80,7 @@ export default async function PlaylistsPage() {
       </div>
 
       {playlistsWithMovies.length === 0 && (
-        <p className="text-sm text-slate-400">
+        <p className="text-sm text-zinc-400">
           You don&apos;t have any playlists yet. Create one and start adding
           movies.
         </p>
@@ -88,15 +88,15 @@ export default async function PlaylistsPage() {
 
       <div className="space-y-4 mt-4">
         {playlistsWithMovies.map((pl) => (
-          <Card key={pl.id} className="border-slate-800 bg-slate-900/70 p-0">
+          <Card key={pl.id} className="border-white/5 bg-zinc-950/50 backdrop-blur-sm p-0 rounded-xl overflow-hidden">
             {/* Playlist header */}
-            <div className="flex items-center justify-between border-b border-slate-800 px-4 py-3">
+            <div className="flex items-center justify-between border-b border-white/5 px-4 py-3 bg-black/40">
               <div>
-                <h2 className="text-lg font-semibold text-slate-50">
+                <h2 className="text-lg font-semibold text-zinc-50">
                   {pl.title}
                 </h2>
                 {pl.description && (
-                  <p className="text-xs text-slate-400">{pl.description}</p>
+                  <p className="text-xs text-zinc-400">{pl.description}</p>
                 )}
               </div>
 
@@ -106,16 +106,16 @@ export default async function PlaylistsPage() {
                       <Trash2 className="h-4 w-4" />
                     </button>
                   </DialogTrigger>
-                  <DialogContent className="border-slate-800 bg-slate-950 text-slate-50 sm:max-w-md">
+                  <DialogContent className="border-white/10 bg-black text-zinc-50 sm:max-w-md">
                     <DialogHeader>
                       <DialogTitle>Delete Playlist</DialogTitle>
-                      <DialogDescription className="text-slate-400">
+                      <DialogDescription className="text-zinc-400">
                         Are you sure you want to delete this entire playlist? This action cannot be undone.
                       </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
                       <DialogClose asChild>
-                        <Button variant="outline" className="border-slate-800 bg-transparent text-slate-300 hover:bg-slate-800 hover:text-slate-50">
+                        <Button variant="outline" className="border-white/10 bg-transparent text-zinc-300 hover:bg-white/10 hover:text-white">
                           Cancel
                         </Button>
                       </DialogClose>

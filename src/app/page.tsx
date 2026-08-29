@@ -34,7 +34,7 @@ export default async function Home() {
   ]);
 
   return (
-    <div className="min-h-screen w-full bg-slate-950 text-slate-50">
+    <div className="min-h-screen w-full bg-transparent text-zinc-50">
       <main className="mx-auto flex max-w-full flex-col gap-5">
         {/* HERO: TMDB carousel */}
         {nowPlaying.length > 0 && (
@@ -50,30 +50,24 @@ export default async function Home() {
               <p className="text-xs uppercase tracking-[0.3em] text-cyan-400/80">
                 Streaming reinvented
               </p>
-              <h1 className="text-lg font-semibold text-slate-100 sm:text-xl">
+              <h1 className="text-lg font-semibold text-zinc-100 sm:text-xl">
                 Watch movies & series in a cinematic, distraction-free
                 experience.
               </h1>
             </div>
-            <Link
-              href="/browse"
-              className="text-xs font-medium text-cyan-400 hover:text-cyan-300 sm:text-sm"
-            >
-              View catalog →
-            </Link>
           </section>
 
           {/* ROWS */}
           <section className="space-y-8 pt-4">
             <div className="space-y-6">
-              <MovieRow title="Trending Movies" media={trendingMovies} />
-              <MovieRow title="Trending TV Shows" media={trendingTv} />
-              <MovieRow title="Popular on Netflix" media={netflixMovies} />
-              <MovieRow title="Popular on Prime Video" media={primeMovies} />
-              <MovieRow title="Popular on Disney+" media={disneyMovies} />
-              <MovieRow title="Popular on Max" media={maxMovies} />
-              <MovieRow title="Top Rated Movies" media={topRatedMovies} />
-              <MovieRow title="Top Rated TV Shows" media={topRatedTv} />
+              <MovieRow title="Trending Movies" media={trendingMovies} href="/browse?type=movie&sort=trending" />
+              <MovieRow title="Trending TV Shows" media={trendingTv} href="/browse?type=tv&sort=trending" />
+              <MovieRow title="Popular on Netflix" media={netflixMovies} href="/browse?type=movie&sort=netflix" />
+              <MovieRow title="Popular on Prime Video" media={primeMovies} href="/browse?type=movie&sort=prime" />
+              <MovieRow title="Popular on Disney+" media={disneyMovies} href="/browse?type=movie&sort=disney" />
+              <MovieRow title="Popular on HBO Max" media={maxMovies} href="/browse?type=movie&sort=max" />
+              <MovieRow title="Top Rated Movies" media={topRatedMovies} href="/browse?type=movie&sort=top_rated" />
+              <MovieRow title="Top Rated TV Shows" media={topRatedTv} href="/browse?type=tv&sort=top_rated" />
             </div>
           </section>
         </div>
@@ -85,14 +79,36 @@ export default async function Home() {
 type MovieRowProps = {
   title: string;
   media: TmdbMedia[];
+  href?: string;
 };
 
-function MovieRow({ title, media }: MovieRowProps) {
+function MovieRow({ title, media, href }: MovieRowProps) {
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-medium text-slate-100 sm:text-base">
-        {title}
-      </h3>
+      <div className="flex items-center justify-between">
+        <h3 className="text-sm font-semibold text-zinc-100 sm:text-base">
+          {title}
+        </h3>
+        {href && (
+          <Link
+            href={href}
+            className="text-zinc-400 hover:text-white transition-colors"
+          >
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+          </Link>
+        )}
+      </div>
       <div className="flex gap-3 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {media.slice(0, 12).map((item) => (
           <div key={item.id} className="w-28 shrink-0 sm:w-40 md:w-48 lg:w-56">
