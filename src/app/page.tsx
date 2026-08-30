@@ -11,23 +11,32 @@ export default async function Home() {
   const session = await auth.api.getSession({ headers: await headers() });
   const username = session?.user.email?.split("@")[0] ?? "Guest";
 
+  // Batch requests to prevent ECONNRESET from too many concurrent TMDB fetches
   const [
     { media: trendingMovies },
     { media: topRatedMovies },
     { media: trendingTv },
-    { media: topRatedTv },
-    nowPlaying,
-    { media: netflixMovies },
-    { media: primeMovies },
-    { media: disneyMovies },
-    { media: maxMovies },
   ] = await Promise.all([
     getTrendingMedia({ type: "movie", timeWindow: "day" }),
     getMedia({ type: "movie", page: 1, sort: "top_rated" }),
     getTrendingMedia({ type: "tv", timeWindow: "day" }),
+  ]);
+
+  const [
+    { media: topRatedTv },
+    nowPlaying,
+    { media: netflixMovies },
+  ] = await Promise.all([
     getMedia({ type: "tv", page: 1, sort: "top_rated" }),
     getNowPlayingMovies(),
     getMediaByProvider({ providerId: 8, type: "movie" }),
+  ]);
+
+  const [
+    { media: primeMovies },
+    { media: disneyMovies },
+    { media: maxMovies },
+  ] = await Promise.all([
     getMediaByProvider({ providerId: 9, type: "movie" }),
     getMediaByProvider({ providerId: 337, type: "movie" }),
     getMediaByProvider({ providerId: 1899, type: "movie" }),

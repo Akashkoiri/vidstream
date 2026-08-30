@@ -16,6 +16,8 @@ export default async function WatchPage({ params }: Props) {
   const userId = session?.user?.id as string | undefined;
 
   let startSeconds = 0;
+  let season = 1;
+  let episode = 1;
   if (userId) {
     const [progress] = await db
       .select()
@@ -25,6 +27,8 @@ export default async function WatchPage({ params }: Props) {
       )
       .limit(1);
     startSeconds = progress?.currentTime ?? 0;
+    season = progress?.season ?? 1;
+    episode = progress?.episode ?? 1;
   }
 
   return (
@@ -34,6 +38,8 @@ export default async function WatchPage({ params }: Props) {
           tmdbId={tmdbId}
           userId={userId}
           startSeconds={startSeconds}
+          season={season}
+          episode={episode}
         />
       </div>
     </div>

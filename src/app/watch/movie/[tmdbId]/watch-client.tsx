@@ -166,7 +166,7 @@ export default function WatchClient({
       />
       {/* Controls Overlay */}
       <div 
-        className={`absolute inset-0 pointer-events-none transition-opacity duration-500 z-10 ${showControls ? 'opacity-100' : 'opacity-0'}`}
+        className={`absolute inset-0 pointer-events-none transition-opacity duration-500 z-50 ${showControls ? 'opacity-100' : 'opacity-0'}`}
       >
         <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center justify-end gap-4 w-full">
           <div className="relative flex items-center gap-3 pointer-events-auto" ref={dropdownRef}>

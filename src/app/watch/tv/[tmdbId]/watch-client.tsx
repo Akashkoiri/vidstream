@@ -10,12 +10,14 @@ type WatchClientProps = {
   tmdbId: string;
   userId?: string;
   startSeconds?: number;
+  season?: number;
+  episode?: number;
 };
 
 const PROVIDERS = [
   {
     name: "VidSrc2",
-    url: (id: string, start: number) => {
+    url: (id: string, start: number, season: number, episode: number) => {
       const url = new URL(`https://vidsrc2.ru/embed/tv/${id}`);
       url.searchParams.set("autoplay", "1");
       url.searchParams.set("autonext", "1");
@@ -25,23 +27,23 @@ const PROVIDERS = [
   },
   {
     name: "CineSrc",
-    url: (id: string) => `https://cinesrc.st/embed/tv/${id}`,
+    url: (id: string, start: number, season: number, episode: number) => `https://cinesrc.st/embed/tv/${id}`,
   },
   {
     name: "VidLink",
-    url: (id: string) => `https://vidlink.pro/tv/${id}`,
+    url: (id: string, start: number, season: number, episode: number) => `https://vidlink.pro/tv/${id}`,
   },
   {
     name: "2Embed",
-    url: (id: string) => `https://www.2embed.cc/embedtv/${id}`,
+    url: (id: string, start: number, season: number, episode: number) => `https://www.2embed.cc/embedtv/${id}`,
   },
   {
     name: "Filmu",
-    url: (id: string) => `https://embed.filmu.in/tv/${id}`,
+    url: (id: string, start: number, season: number, episode: number) => `https://embed.filmu.in/tv/${id}/${season}/${episode}`,
   },
 ];
 
-export default function WatchClient({ tmdbId, userId, startSeconds = 0 }: WatchClientProps) {
+export default function WatchClient({ tmdbId, userId, startSeconds = 0, season = 1, episode = 1 }: WatchClientProps) {
   const router = useRouter();
   const [providerIdx, setProviderIdx] = useState(0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -50,7 +52,7 @@ export default function WatchClient({ tmdbId, userId, startSeconds = 0 }: WatchC
   const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const selectedProvider = PROVIDERS[providerIdx];
-  const src = selectedProvider.url(tmdbId, startSeconds);
+  const src = selectedProvider.url(tmdbId, startSeconds, season, episode);
 
   useEffect(() => {
     const handleMouseMove = () => {
@@ -133,7 +135,7 @@ export default function WatchClient({ tmdbId, userId, startSeconds = 0 }: WatchC
       />
       {/* Controls Overlay */}
       <div 
-        className={`absolute inset-0 pointer-events-none transition-opacity duration-500 z-10 ${showControls ? 'opacity-100' : 'opacity-0'}`}
+        className={`absolute inset-0 pointer-events-none transition-opacity duration-500 z-50 ${showControls ? 'opacity-100' : 'opacity-0'}`}
       >
         <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center justify-end gap-4 w-full">
           <div className="relative flex items-center gap-3 pointer-events-auto" ref={dropdownRef}>
