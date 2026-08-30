@@ -152,66 +152,69 @@ export default function WatchClient({
   }, [userId, tmdbId]);
 
   return (
-    <div className={`fixed inset-0 z-50 bg-black flex flex-col items-center justify-center ${!showControls ? 'cursor-none' : ''}`}>
-      {/* Invisible hover zone at the top to reveal controls */}
+    <div className={`relative min-h-screen flex w-full flex-1 items-center justify-center p-4 sm:p-6 bg-black ${!showControls ? 'cursor-none' : ''}`}>
       <div 
-        className="absolute top-0 left-0 right-0 h-32 z-40"
-        onMouseMove={() => {
-          setShowControls(true);
-          if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
-          if (!dropdownOpen) {
-            hideTimeoutRef.current = setTimeout(() => setShowControls(false), 3000);
-          }
-        }}
-      />
-      {/* Controls Overlay */}
-      <div 
-        className={`absolute inset-0 pointer-events-none transition-opacity duration-500 z-50 ${showControls ? 'opacity-100' : 'opacity-0'}`}
+        className={`absolute inset-0 pointer-events-none transition-opacity duration-500 z-10 ${showControls ? 'opacity-100' : 'opacity-0'}`}
       >
-        <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center justify-end gap-4 w-full">
-          <div className="relative flex items-center gap-3 pointer-events-auto" ref={dropdownRef}>
-          <div className="relative">
-            <Button
-              variant="secondary"
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="gap-2 rounded-full px-4 border border-white/10 bg-black/40 backdrop-blur-md hover:bg-black/80 text-white"
-            >
-              <MonitorPlay className="w-4 h-4 text-white" />
-              <span className="font-semibold">{selectedProvider.name}</span>
-              <ChevronDown className={`w-4 h-4 text-zinc-300 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
-            </Button>
+        <Button 
+          variant="ghost" 
+          onClick={() => router.back()} 
+          className="absolute top-4 left-4 sm:top-6 sm:left-6 z-10 gap-2 text-white hover:bg-white/20 pointer-events-auto"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back
+        </Button>
 
-            {dropdownOpen && (
-              <div className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-white/10 bg-black/95 backdrop-blur-md p-2 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                <div className="flex flex-col gap-1">
-                  {PROVIDERS.map((p, idx) => (
-                    <button
-                      key={p.name}
-                      onClick={() => {
-                        setProviderIdx(idx);
-                        setDropdownOpen(false);
-                      }}
-                      className={`flex items-center justify-between w-full px-3 py-2 text-sm rounded-md transition-colors ${
-                        idx === providerIdx
-                          ? "bg-white text-black font-semibold shadow-sm"
-                          : "text-zinc-300 hover:bg-white/10 hover:text-white"
-                      }`}
-                    >
-                      {p.name}
-                      {idx === providerIdx && (
-                        <div className="w-1.5 h-1.5 rounded-full bg-current" />
-                      )}
-                    </button>
-                  ))}
+        <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center justify-end gap-4 z-10 pointer-events-auto">
+          <div className="relative flex items-center gap-3" ref={dropdownRef}>
+            <div className="relative">
+              <Button
+                variant="secondary"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="gap-2 rounded-full px-4 border border-white/10 bg-black/40 backdrop-blur-md hover:bg-black/80 text-white"
+              >
+                <MonitorPlay className="w-4 h-4 text-white" />
+                <span className="font-semibold">{selectedProvider.name}</span>
+                <ChevronDown className={`w-4 h-4 text-zinc-300 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
+              </Button>
+
+              {dropdownOpen && (
+                <div className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-white/10 bg-black/95 backdrop-blur-md p-2 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="flex flex-col gap-1">
+                    {PROVIDERS.map((p, idx) => (
+                      <button
+                        key={p.name}
+                        onClick={() => {
+                          setProviderIdx(idx);
+                          setDropdownOpen(false);
+                        }}
+                        className={`flex items-center justify-between w-full px-3 py-2 text-sm rounded-md transition-colors ${
+                          idx === providerIdx
+                            ? "bg-white text-black font-semibold shadow-sm"
+                            : "text-zinc-300 hover:bg-white/10 hover:text-white"
+                        }`}
+                      >
+                        {p.name}
+                        {idx === providerIdx && (
+                          <div className="w-1.5 h-1.5 rounded-full bg-current" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
-      </div>
 
-      <div className="relative w-full h-full flex-1 bg-black overflow-hidden">
+      <div 
+        className="relative w-full aspect-video overflow-hidden rounded-xl sm:rounded-2xl bg-black shadow-2xl z-0"
+        style={{ 
+          maxHeight: 'calc(100vh - 8rem)', 
+          maxWidth: 'calc((100vh - 8rem) * 16 / 9)' 
+        }}
+      >
         <iframe
           key={src}
           src={src}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { type TmdbMedia, getImageUrl } from "@/lib/tmdb";
@@ -11,17 +11,44 @@ type Props = {
   username: string;
 };
 
-const AUTOPLAY_INTERVAL = 12000;
+const AUTOPLAY_INTERVAL = 10000;
 
 export function NowPlayingHero({ movies }: Props) {
   const [index, setIndex] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!movies.length) return;
     const id = setInterval(() => {
-      setIndex((prev) => (prev + 1) % movies.length);
+      if (scrollRef.current) {
+        const nextIndex = (index + 1) % movies.length;
+        scrollRef.current.scrollTo({
+          left: nextIndex * scrollRef.current.clientWidth,
+          behavior: "smooth",
+        });
+      }
     }, AUTOPLAY_INTERVAL);
     return () => clearInterval(id);
-  }, [movies.length]);
+  }, [index, movies.length]);
+
+  const handleDotClick = (i: number) => {
+    setIndex(i);
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({
+        left: i * scrollRef.current.clientWidth,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const scrollLeft = e.currentTarget.scrollLeft;
+    const width = e.currentTarget.clientWidth;
+    const newIndex = Math.round(scrollLeft / width);
+    if (newIndex !== index) {
+      setIndex(newIndex);
+    }
+  };
 
   if (!movies.length) return null;
 
@@ -29,8 +56,9 @@ export function NowPlayingHero({ movies }: Props) {
     <section className="relative w-full overflow-hidden bg-transparent">
       {/* SLIDES WRAPPER */}
       <div
-        className="flex transition-transform duration-700 ease-out"
-        style={{ transform: `translateX(-${index * 100}%)` }}
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className="flex overflow-x-auto snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {movies.map((movie, i) => (
           <HeroSlide
@@ -48,11 +76,12 @@ export function NowPlayingHero({ movies }: Props) {
           {movies.slice(0, movies.length).map((m, i) => (
             <button
               key={m.id}
-              onClick={() => setIndex(i)}
-              className={`h-2 rounded-full transition-all shadow-sm ${i === index
+              onClick={() => handleDotClick(i)}
+              className={`h-2 rounded-full transition-all shadow-sm ${
+                i === index
                   ? "w-6 bg-white shadow-[0_0_10px_rgba(255,255,255,0.5)]"
                   : "w-2 bg-zinc-600 hover:bg-zinc-400"
-                }`}
+              }`}
             />
           ))}
         </div>
@@ -78,7 +107,7 @@ function HeroSlide({ movie, isActive, index }: SlideProps) {
   const rating = movie.vote_average ? movie.vote_average.toFixed(1) : null;
 
   return (
-    <article className="relative flex min-w-full items-end overflow-hidden h-[100svh] pb-12 sm:pb-16 md:pb-20">
+    <article className="relative flex min-w-full snap-center items-end overflow-hidden h-[100svh] pb-12 sm:pb-16 md:pb-20">
       {/* BACKDROP IMAGE */}
       {backdrop && (
         <div className="absolute inset-0">
