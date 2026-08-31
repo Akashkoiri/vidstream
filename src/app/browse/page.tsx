@@ -6,6 +6,7 @@ import { loadBrowseSearchParams } from "./search-params";
 import { getMedia, getTrendingMedia, getMediaByProvider } from "@/lib/tmdb";
 import { MoviesGrid } from "./movies-grid";
 import { Spinner } from "@/components/ui/spinner";
+import { ResponsiveBanner } from "@/components/ResponsiveBanner";
 
 type BrowsePageProps = {
   searchParams: Promise<SearchParams>;
@@ -58,6 +59,7 @@ export default async function BrowsePage({ searchParams }: BrowsePageProps) {
 
   return (
     <div className="mx-auto flex w-full flex-col space-y-8 px-3 pt-16 pb-6 sm:px-4 sm:pb-8">
+      <ResponsiveBanner />
       <Suspense key={suspenseKey} fallback={<div className="flex w-full items-center justify-center py-20"><Spinner /></div>}>
         <div id="browse-grid">
           <BrowseData type={type} page={page} sort={sort} />

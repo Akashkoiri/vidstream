@@ -3,10 +3,17 @@ import Link from "next/link";
 import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
-import { getMedia, getTrendingMedia, getNowPlayingMovies, getMediaByProvider, type TmdbMedia } from "@/lib/tmdb";
+import {
+  getMedia,
+  getTrendingMedia,
+  getNowPlayingMovies,
+  getMediaByProvider,
+  type TmdbMedia,
+} from "@/lib/tmdb";
 import { NowPlayingHero } from "@/app/browse/now-playing-hero";
 import { MovieCard } from "@/components/movie-card";
-
+import { ResponsiveBanner } from "@/components/ResponsiveBanner";
+import { CarouselScroller } from "@/app/playlists/carousel-scroller";
 export default async function Home() {
   const session = await auth.api.getSession({ headers: await headers() });
   const username = session?.user.email?.split("@")[0] ?? "Guest";
@@ -22,15 +29,12 @@ export default async function Home() {
     getTrendingMedia({ type: "tv", timeWindow: "day" }),
   ]);
 
-  const [
-    { media: topRatedTv },
-    nowPlaying,
-    { media: netflixMovies },
-  ] = await Promise.all([
-    getMedia({ type: "tv", page: 1, sort: "top_rated" }),
-    getNowPlayingMovies(),
-    getMediaByProvider({ providerId: 8, type: "movie" }),
-  ]);
+  const [{ media: topRatedTv }, nowPlaying, { media: netflixMovies }] =
+    await Promise.all([
+      getMedia({ type: "tv", page: 1, sort: "top_rated" }),
+      getNowPlayingMovies(),
+      getMediaByProvider({ providerId: 8, type: "movie" }),
+    ]);
 
   const [
     { media: primeMovies },
@@ -52,7 +56,9 @@ export default async function Home() {
           </section>
         )}
 
-        <div className="px-4 pb-16 pt-8 sm:px-6 lg:px-8 lg:pt-10">
+        <ResponsiveBanner />
+
+        <div className="px-4 pb-5 sm:px-6 lg:px-8 lg:pt-10">
           {/* CTA STRIP UNDER HERO */}
           <section className="flex flex-wrap items-center justify-between gap-3 pt-2">
             <div className="space-y-1">
@@ -69,17 +75,51 @@ export default async function Home() {
           {/* ROWS */}
           <section className="space-y-8 pt-4">
             <div className="space-y-6">
-              <MovieRow title="Trending Movies" media={trendingMovies} href="/browse?type=movie&sort=trending" />
-              <MovieRow title="Trending TV Shows" media={trendingTv} href="/browse?type=tv&sort=trending" />
-              <MovieRow title="Popular on Netflix" media={netflixMovies} href="/browse?type=movie&sort=netflix" />
-              <MovieRow title="Popular on Prime Video" media={primeMovies} href="/browse?type=movie&sort=prime" />
-              <MovieRow title="Popular on Disney+" media={disneyMovies} href="/browse?type=movie&sort=disney" />
-              <MovieRow title="Popular on HBO Max" media={maxMovies} href="/browse?type=movie&sort=max" />
-              <MovieRow title="Top Rated Movies" media={topRatedMovies} href="/browse?type=movie&sort=top_rated" />
-              <MovieRow title="Top Rated TV Shows" media={topRatedTv} href="/browse?type=tv&sort=top_rated" />
+              <MovieRow
+                title="Trending Movies"
+                media={trendingMovies}
+                href="/browse?type=movie&sort=trending"
+              />
+              <MovieRow
+                title="Trending TV Shows"
+                media={trendingTv}
+                href="/browse?type=tv&sort=trending"
+              />
+              <MovieRow
+                title="Popular on Netflix"
+                media={netflixMovies}
+                href="/browse?type=movie&sort=netflix"
+              />
+              <MovieRow
+                title="Popular on Prime Video"
+                media={primeMovies}
+                href="/browse?type=movie&sort=prime"
+              />
+              <MovieRow
+                title="Popular on Disney+"
+                media={disneyMovies}
+                href="/browse?type=movie&sort=disney"
+              />
+              <MovieRow
+                title="Popular on HBO Max"
+                media={maxMovies}
+                href="/browse?type=movie&sort=max"
+              />
+              <MovieRow
+                title="Top Rated Movies"
+                media={topRatedMovies}
+                href="/browse?type=movie&sort=top_rated"
+              />
+              <MovieRow
+                title="Top Rated TV Shows"
+                media={topRatedTv}
+                href="/browse?type=tv&sort=top_rated"
+              />
             </div>
           </section>
         </div>
+
+        <ResponsiveBanner />
       </div>
     </div>
   );
@@ -118,13 +158,16 @@ function MovieRow({ title, media, href }: MovieRowProps) {
           </Link>
         )}
       </div>
-      <div className="flex gap-3 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <CarouselScroller>
         {media.slice(0, 12).map((item) => (
-          <div key={item.id} className="w-28 shrink-0 sm:w-40 md:w-48 lg:w-56">
+          <div
+            key={item.id}
+            className="w-28 shrink-0 sm:w-40 md:w-48 lg:w-56 snap-start"
+          >
             <MovieCard movie={item} />
           </div>
         ))}
-      </div>
+      </CarouselScroller>
     </div>
   );
 }

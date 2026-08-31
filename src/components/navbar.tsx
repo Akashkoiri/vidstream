@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, User, LogOut, ListVideo } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -53,7 +54,7 @@ function AuthButtons({
   onLinkClick,
   menuAlign = "end",
 }: {
-  user: any;
+  user: { name?: string | null; email?: string | null } | null;
   isPending: boolean;
   onLinkClick?: () => void;
   menuAlign?: "start" | "center" | "end";
@@ -61,6 +62,7 @@ function AuthButtons({
   const [mounted, setMounted] = useState(false);
   
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -167,7 +169,7 @@ export function Navbar() {
         {/* Custom Logo from Reference */}
         <Link href="/" className="flex items-center gap-3 group">
           <div className="relative flex h-9 w-9 items-center justify-center">
-            <img src="/logo.svg" alt="VidStream Logo" width={32} height={32} className="transition-transform duration-500 group-hover:scale-105" />
+            <Image src="/logo.svg" alt="VidStream Logo" width={32} height={32} className="transition-transform duration-500 group-hover:scale-105" />
           </div>
           <span className="font-extrabold text-2xl tracking-tight text-white drop-shadow-sm transition-all duration-500 group-hover:text-zinc-300">
             VidStream

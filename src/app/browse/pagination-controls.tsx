@@ -24,6 +24,10 @@ export function PaginationControls({ page, totalPages }: Props) {
   const [pageState, setPage] = useQueryState("page", pageParam);
   const current = pageState ?? page;
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page]);
+
   if (!totalPages || totalPages <= 1) return null;
 
   const goTo = (next: number) => {
@@ -38,9 +42,6 @@ export function PaginationControls({ page, totalPages }: Props) {
     });
   };
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [page]);
 
   const createPageNumbers = () => {
     const pages: (number | "...")[] = [];

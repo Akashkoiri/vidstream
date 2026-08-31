@@ -5,6 +5,7 @@ import { watchProgress } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import WatchClient from "./watch-client";
 import { headers } from "next/headers";
+import { RectangleAd } from "@/components/RectangleAd";
 
 type Props = { params: Promise<{ tmdbId: string }> };
 
@@ -32,16 +33,14 @@ export default async function WatchPage({ params }: Props) {
   }
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] flex-col">
-      <div className="flex w-full flex-1 flex-col">
-        <WatchClient
-          tmdbId={tmdbId}
-          userId={userId}
-          startSeconds={startSeconds}
-          season={season}
-          episode={episode}
-        />
-      </div>
+    <div className="flex w-full flex-1 flex-col relative z-10">
+      <WatchClient
+        tmdbId={tmdbId}
+        userId={userId}
+        startSeconds={startSeconds}
+        season={season}
+        episode={episode}
+      />
     </div>
   );
 }

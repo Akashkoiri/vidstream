@@ -5,6 +5,8 @@ import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ChevronDown, MonitorPlay } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { RectangleAd } from "@/components/RectangleAd";
+import { NativeBanner } from "@/components/NativeBanner";
 
 type WatchClientProps = {
   tmdbId: string;
@@ -27,46 +29,37 @@ const PROVIDERS = [
   },
   {
     name: "CineSrc",
-    url: (id: string, start: number, season: number, episode: number) => `https://cinesrc.st/embed/tv/${id}`,
+    url: (id: string, start: number, season: number, episode: number) =>
+      `https://cinesrc.st/embed/tv/${id}`,
   },
   {
     name: "Filmu",
-    url: (id: string, start: number, season: number, episode: number) => `https://embed.filmu.in/tv/${id}/${season}/${episode}`,
+    url: (id: string, start: number, season: number, episode: number) =>
+      `https://embed.filmu.in/tv/${id}/${season}/${episode}`,
   },
 ];
 
-export default function WatchClient({ tmdbId, userId, startSeconds = 0, season = 1, episode = 1 }: WatchClientProps) {
+export default function WatchClient({
+  tmdbId,
+  userId,
+  startSeconds = 0,
+  season = 1,
+  episode = 1,
+}: WatchClientProps) {
   const router = useRouter();
   const [providerIdx, setProviderIdx] = useState(0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [showControls, setShowControls] = useState(true);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const selectedProvider = PROVIDERS[providerIdx];
   const src = selectedProvider.url(tmdbId, startSeconds, season, episode);
 
   useEffect(() => {
-    const handleMouseMove = () => {
-      setShowControls(true);
-      if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
-      if (!dropdownOpen) {
-        hideTimeoutRef.current = setTimeout(() => setShowControls(false), 3000);
-      }
-    };
-
-    hideTimeoutRef.current = setTimeout(() => setShowControls(false), 3000);
-    window.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
-    };
-  }, [dropdownOpen]);
-
-  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setDropdownOpen(false);
       }
     };
@@ -113,13 +106,16 @@ export default function WatchClient({ tmdbId, userId, startSeconds = 0, season =
   }, [userId, tmdbId]);
 
   return (
-    <div className={`relative min-h-screen flex w-full flex-1 items-center justify-center p-4 sm:p-6 bg-black ${!showControls ? 'cursor-none' : ''}`}>
-      <div 
-        className={`absolute inset-0 pointer-events-none transition-opacity duration-500 z-10 ${showControls ? 'opacity-100' : 'opacity-0'}`}
+    <div className="flex flex-col min-h-screen bg-black w-full">
+      <div
+        className="relative flex flex-col lg:flex-row w-full flex-1 items-center justify-center p-4 sm:p-6 gap-4 lg:gap-0 lg:pt-24"
       >
-        <Button 
-          variant="ghost" 
-          onClick={() => router.back()} 
+        <div
+        className="absolute inset-0 pointer-events-none z-50"
+      >
+        <Button
+          variant="ghost"
+          onClick={() => router.back()}
           className="absolute top-4 left-4 sm:top-6 sm:left-6 z-10 gap-2 text-white hover:bg-white/20 pointer-events-auto"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -136,7 +132,9 @@ export default function WatchClient({ tmdbId, userId, startSeconds = 0, season =
               >
                 <MonitorPlay className="w-4 h-4 text-white" />
                 <span className="font-semibold">{selectedProvider.name}</span>
-                <ChevronDown className={`w-4 h-4 text-zinc-300 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown
+                  className={`w-4 h-4 text-zinc-300 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`}
+                />
               </Button>
 
               {dropdownOpen && (
@@ -169,11 +167,25 @@ export default function WatchClient({ tmdbId, userId, startSeconds = 0, season =
         </div>
       </div>
 
-      <div 
-        className="relative w-full aspect-video overflow-hidden rounded-xl sm:rounded-2xl bg-black shadow-2xl z-0"
-        style={{ 
-          maxHeight: 'calc(100vh - 8rem)', 
-          maxWidth: 'calc((100vh - 8rem) * 16 / 9)' 
+      <div className="flex lg:hidden w-full justify-center pt-16 z-10 gap-4 flex-wrap">
+        <RectangleAd />
+        <div className="hidden md:block">
+          <RectangleAd />
+        </div>
+      </div>
+
+      <div className="hidden lg:flex lg:w-[200px] xl:w-[320px] justify-center items-center z-10">
+        <div className="transform lg:scale-[0.65] xl:scale-100 origin-center flex flex-col gap-4 justify-center items-center w-[300px]">
+          <RectangleAd />
+          <RectangleAd />
+        </div>
+      </div>
+
+      <div
+        className="relative w-full flex-1 aspect-video overflow-hidden rounded-xl sm:rounded-2xl bg-black shadow-2xl z-0"
+        style={{
+          maxHeight: "calc(100vh - 8rem)",
+          maxWidth: "calc((100vh - 8rem) * 16 / 9)",
         }}
       >
         <iframe
@@ -183,6 +195,25 @@ export default function WatchClient({ tmdbId, userId, startSeconds = 0, season =
           allowFullScreen
           referrerPolicy="no-referrer"
         />
+      </div>
+
+      <div className="hidden lg:flex lg:w-[200px] xl:w-[320px] justify-center items-center z-10">
+        <div className="transform lg:scale-[0.65] xl:scale-100 origin-center flex flex-col gap-4 justify-center items-center w-[300px]">
+          <RectangleAd />
+          <RectangleAd />
+        </div>
+      </div>
+
+      <div className="flex lg:hidden w-full justify-center pb-4 z-10 gap-4 flex-wrap">
+        <RectangleAd />
+        <div className="hidden md:block">
+          <RectangleAd />
+        </div>
+      </div>
+      </div>
+
+      <div className="w-full flex justify-center pb-8 z-10 overflow-hidden">
+        <NativeBanner />
       </div>
     </div>
   );

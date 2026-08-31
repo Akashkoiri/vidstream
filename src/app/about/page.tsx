@@ -18,7 +18,7 @@ export default function AboutPage() {
               <p className="text-zinc-300 leading-relaxed mb-8">
                 At VidStream, we believe that everyone deserves access to high-quality entertainment. 
                 Our platform is designed to provide a seamless, beautiful, and intuitive streaming experience. 
-                Whether you're looking for the latest blockbusters, timeless classics, or hidden gems, 
+                Whether you&apos;re looking for the latest blockbusters, timeless classics, or hidden gems, 
                 VidStream brings the magic of cinema directly to your screen.
               </p>
 

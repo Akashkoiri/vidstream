@@ -3,10 +3,11 @@ import type { TmdbMedia } from "@/lib/tmdb";
 import { PaginationControls } from "./pagination-controls";
 import { SortTabs } from "./sort-tabs";
 import { TypeTabs } from "./type-tabs";
+import * as React from "react";
 import { MovieCard } from "@/components/movie-card";
-
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { ResponsiveBanner } from "@/components/ResponsiveBanner";
 
 type Props = {
   media: TmdbMedia[];
@@ -52,6 +53,9 @@ export function MoviesGrid({ media, page, totalPages, sort, type }: Props) {
       </div>
 
       <PaginationControls page={page} totalPages={totalPages} />
+      <div className="w-full mt-8">
+        <ResponsiveBanner />
+      </div>
     </section>
   );
 }

@@ -17,6 +17,7 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { ResponsiveBanner } from "@/components/ResponsiveBanner";
 
 type Media = {
   id: number;
@@ -134,7 +135,9 @@ export function SearchDialog() {
         </div>
 
         {/* ✅ key change: this fills the remaining space and scrolls */}
-        <div className="flex-1 overflow-y-auto pr-1 scrollbar-thin">
+        <div className="flex-1 overflow-y-auto pr-1 scrollbar-thin flex flex-col gap-4">
+          <ResponsiveBanner className="!my-0 shrink-0" />
+          
           {isLoading && (
             <div className="flex items-center justify-center py-10 text-sm text-zinc-400">
               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
