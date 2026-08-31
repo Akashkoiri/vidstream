@@ -51,10 +51,12 @@ function AuthButtons({
   user,
   isPending,
   onLinkClick,
+  menuAlign = "end",
 }: {
   user: any;
   isPending: boolean;
   onLinkClick?: () => void;
+  menuAlign?: "start" | "center" | "end";
 }) {
   const [mounted, setMounted] = useState(false);
   
@@ -77,7 +79,7 @@ function AuthButtons({
             <span className="sr-only">Toggle user menu</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-56 bg-zinc-950 border-zinc-800 text-zinc-200">
+        <DropdownMenuContent align={menuAlign} className="w-56 bg-zinc-950 border-zinc-800 text-zinc-200">
           {(user?.name || user?.email) && (
             <>
               <DropdownMenuLabel className="font-normal">
@@ -198,21 +200,22 @@ export function Navbar() {
               side="right"
               className="w-[300px] border-zinc-800 bg-black text-zinc-100"
             >
-              <SheetHeader>
-                <SheetTitle className="text-left text-zinc-100">
-                  Menu
-                </SheetTitle>
-              </SheetHeader>
-              <div className="mt-8 flex flex-col gap-6">
-                <div className="flex flex-col gap-4">
-                  <NavLinks onLinkClick={() => setIsOpen(false)} />
-                </div>
-                <div className="h-px w-full bg-zinc-800" />
+              <div className="mt-6 flex flex-col gap-6">
                 <AuthButtons
                   user={user}
                   isPending={isPending}
                   onLinkClick={() => setIsOpen(false)}
+                  menuAlign="start"
                 />
+                <div className="h-px w-full bg-zinc-800" />
+                <SheetHeader>
+                  <SheetTitle className="text-left text-zinc-100">
+                    Menu
+                  </SheetTitle>
+                </SheetHeader>
+                <div className="flex flex-col gap-4">
+                  <NavLinks onLinkClick={() => setIsOpen(false)} />
+                </div>
               </div>
             </SheetContent>
           </Sheet>

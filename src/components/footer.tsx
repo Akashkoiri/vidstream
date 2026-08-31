@@ -12,15 +12,17 @@ export function Footer() {
     <footer className="w-full border-t border-white/5 bg-black">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative flex h-8 w-8 items-center justify-center">
-              <img src="/logo.svg" alt="VidStream Logo" width={28} height={28} className="transition-transform duration-500 group-hover:scale-105" />
-            </div>
-            <span className="font-extrabold text-xl tracking-tight text-white transition-colors duration-500 group-hover:text-zinc-300">
-              VidStream
-            </span>
-          </Link>
+          {/* Brand & Description */}
+          <div className="flex flex-col items-center md:items-start gap-2 max-w-xs">
+            <Link href="/" className="group">
+              <span className="font-extrabold text-xl tracking-tight text-white transition-colors duration-500 group-hover:text-zinc-300">
+                VidStream
+              </span>
+            </Link>
+            <p className="text-sm text-zinc-400 text-center md:text-left">
+              Your ultimate destination for endless entertainment. Stream movies and TV shows in cinematic quality.
+            </p>
+          </div>
 
           {/* Links */}
           <nav className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-sm font-medium text-zinc-400">
@@ -32,7 +34,7 @@ export function Footer() {
 
           {/* Socials */}
           <div className="flex gap-4 text-zinc-500">
-            <a href="https://twitter.com" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
+            <a href="https://twitter.com/Akashkoiri12" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
               <span className="sr-only">Twitter</span>
               <Twitter className="h-5 w-5" />
             </a>
